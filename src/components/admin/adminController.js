@@ -78,27 +78,27 @@ module.exports = {
             search = search.value != '' ? search.value : false
             let query = []
             query.push(
-                
                 {
-                    $group:  {
+                    $group: {
                         "_id": {
-                      "date": {$dateToString:{
-                        date:'$createdAt',
-                        format: "%Y-%m-%d"
-                      }},
-                      "companyCode": "$companyCode"
-                  },
-                      count: { $sum:1 }
-                       
-                     }
-                }, 
-                {
-                    $sort: {
-                        '_id.date': -1
+                            "date": {
+                                $dateToString: {
+                                    date: '$createdAt',
+                                    format: "%Y-%m-%d"
+                                }
+                            },
+                            "companyCode": "$companyCode"
+                        },
+                        count: { $sum: 1 },
+
                     }
                 },
-               
-           
+                {
+                    $sort: {
+                        '_id.date': -1,
+                        count:-1
+                    }
+                },
             )
             if (search) {
                 query.unshift({
@@ -140,9 +140,9 @@ module.exports = {
                     },
                 })
             }
-            if(companyCode){
+            if (companyCode) {
                 query.unshift({
-                    $match:{
+                    $match: {
                         companyCode: companyCode
                     }
                 })
@@ -186,17 +186,17 @@ module.exports = {
             search = search.value != '' ? search.value : false
             let query = []
             query.push(
-                
+
                 {
-                    $match:{
+                    $match: {
                         companyCode,
-                        createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date))}
+                        createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date)) }
                     }
-                },{
-                    $sort:{
-                        createdAt:-1
-                    }
+                }, {
+                $sort: {
+                    createdAt: -1
                 }
+            }
             )
             if (search) {
                 query.push({
@@ -251,7 +251,7 @@ module.exports = {
             return requestHandler.handleError({ res, err_msg: err.message })
         }
     },
-    renderTrackerReportDateWise: async(req, res)=>{
+    renderTrackerReportDateWise: async (req, res) => {
         try {
             const userId = req.user._id
             const { date } = req.query
@@ -285,11 +285,11 @@ module.exports = {
         }
     },
     logout: async (req, res) => {
-		try {
-			await res.clearCookie('jwt')
-			return requestHandler.handleResponse({ res, data: null })
-		} catch (err) {
-			return requestHandler.handleError({ res, err })
-		}
-	},
+        try {
+            await res.clearCookie('jwt')
+            return requestHandler.handleResponse({ res, data: null })
+        } catch (err) {
+            return requestHandler.handleError({ res, err })
+        }
+    },
 }

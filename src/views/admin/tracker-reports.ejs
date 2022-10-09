@@ -169,6 +169,7 @@
                                                                             <th>Company Code</th>
                                                                             <th>Date</th>
                                                                             <th>Hits</th>
+                                                                            <th>Average Hits/sec</th>
                                                                             <th>View</th>
                                                                             <!-- <th>IP</th>
                                                                             <th>Origin</th>
@@ -296,14 +297,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script type="text/javascript">
+       
         setInterval(function() {
             loadAdminDataTable()
-}, 5000);
-        // const interval = setInterval(function() {
-        //     loadAdminDataTable()
-        // }, 2000);
-        // clearInterval(interval);
-
+        }, 5000);
         $(document).ready(function () {
             loadAdminDataTable()
 
@@ -389,6 +386,14 @@
                     }},
                     { render(data, type, row, meta){
                         return row.count
+                    }},
+                    { render(data, type, row, meta){
+                        let text 
+                        let now = new Date(),
+                        then = new Date( now.getFullYear(),now.getMonth(),now.getDate(),0,0,0),diff = (now.getTime() - then.getTime())/1000
+                        text = row.count/Math.floor(diff)
+                        return text.toFixed(3)
+
                     }},
                     
                     { 
