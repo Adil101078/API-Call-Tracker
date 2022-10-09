@@ -71,35 +71,42 @@ module.exports = {
     },
     trackerReportListing: async (req, res) => {
         try {
-            let { startDate, endDate, search, start, length } = req.query
+            let { startDate, endDate, search, start, length, companyCode } = req.query
             const orderBy = req.query.columns[req.query.order[0].column].data
             const orderByData = {}
             orderByData[orderBy] = req.query.order[0].dir == 'asc' ? 1 : -1
             search = search.value != '' ? search.value : false
             let query = []
             query.push(
+                
+                {
+                    $group:  {
+                        "_id": {
+                      "date": {$dateToString:{
+                        date:'$createdAt',
+                        format: "%Y-%m-%d"
+                      }},
+                      "companyCode": "$companyCode"
+                  },
+                      count: { $sum:1 }
+                       
+                     }
+                }, 
                 {
                     $sort: {
-                        createdAt: -1
+                        '_id.date': -1
                     }
                 },
-                {
-                    $group: { _id: {
-                        $dateToString: {
-                            "date": "$createdAt",
-                            "format": "%Y-%m-%d"
-                        }
-                    }, 
-                    companyCode:{$addToSet:'$companyCode'},
-                    count: { $sum:1 }}
-                }, 
                
            
             )
             if (search) {
-                query.push({
+                query.unshift({
                     $match: {
                         $or: [
+                            {
+                                count: { $regex: search, $options: 'i' },
+                            },
                             {
                                 companyCode: { $regex: search, $options: 'i' },
                             },
@@ -123,7 +130,7 @@ module.exports = {
             if (startDate && endDate) {
                 let startToISO = dateToUtcStartDate(startDate)
                 let endToISO = dateToUtcEndDate(endDate)
-                query.push({
+                query.unshift({
                     $match: {
                         $or: [
                             {
@@ -131,6 +138,13 @@ module.exports = {
                             },
                         ],
                     },
+                })
+            }
+            if(companyCode){
+                query.unshift({
+                    $match:{
+                        companyCode: companyCode
+                    }
                 })
             }
             query.push({
@@ -165,7 +179,7 @@ module.exports = {
     },
     trackerReportDateWiseListing: async (req, res) => {
         try {
-            let { startDate, endDate, search, start, length } = req.query
+            let { search, start, length, date, companyCode } = req.query
             const orderBy = req.query.columns[req.query.order[0].column].data
             const orderByData = {}
             orderByData[orderBy] = req.query.order[0].dir == 'asc' ? 1 : -1
@@ -173,23 +187,11 @@ module.exports = {
             let query = []
             query.push(
                 {
-                    $sort: {
-                        createdAt: -1
+                    $match:{
+                        companyCode,
+                        createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date))}
                     }
-                },
-                
-                {
-                    $group: { _id: {
-                        $dateToString: {
-                            "date": "$createdAt",
-                            "format": "%Y-%m-%d"
-                        }
-                    }, 
-                    companyCode:{$addToSet:'$companyCode'},
-                    count: { $sum:1 }}
-                }, 
-               
-           
+                }
             )
             if (search) {
                 query.push({
@@ -209,20 +211,6 @@ module.exports = {
                             },
                             {
                                 destination: { $regex: search, $options: 'i' },
-                            },
-                        ],
-                    },
-                })
-            }
-
-            if (startDate && endDate) {
-                let startToISO = dateToUtcStartDate(startDate)
-                let endToISO = dateToUtcEndDate(endDate)
-                query.push({
-                    $match: {
-                        $or: [
-                            {
-                                createdAt: { $gte: new Date(startToISO), $lte: new Date(endToISO) },
                             },
                         ],
                     },
@@ -258,6 +246,19 @@ module.exports = {
             return requestHandler.handleError({ res, err_msg: err.message })
         }
     },
+    renderTrackerReportDateWise: async(req, res)=>{
+        try {
+            const userId = req.user._id
+            const { date } = req.query
+            const currentUser = await Model.Admin.findById(userId)
+            const company = await trackerModel.find().lean()
+            const companyCodes = getUniqueListBy(company, 'companyCode')
+            return res.render('admin/dateWiseReportListing', { currentUser, pageName: 'Track', companyCodes })
+        } catch (err) {
+            logger.error(err)
+            return requestHandler.handleError({ res, err_msg: err.message })
+        }
+    },
     createSuperAdmin: async () => {
         try {
             const checkSuperAdmin = await Model.Admin.findOne({ adminType: "superAdmin" })
@@ -277,5 +278,13 @@ module.exports = {
         } catch (err) {
             logger.error(err)
         }
-    }
+    },
+    logout: async (req, res) => {
+		try {
+			await res.clearCookie('jwt')
+			return requestHandler.handleResponse({ res, data: null })
+		} catch (err) {
+			return requestHandler.handleError({ res, err })
+		}
+	},
 }

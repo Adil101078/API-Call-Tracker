@@ -1,94 +1,17 @@
 <div class="row top-menu2">
 	<nav class="navbar navbar-static-top dark-bg-header top-menu" role="navigation" style="margin-bottom: 0">
-		<div class="navbar-header">
+		<!-- <div class="navbar-header">
 			<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"><i data-toggle="tooltip" data-placement="bottom" title="Menu" class="fa fa-bars"></i>
 			</a>
-		</div>
-		<ul class="nav navbar-top-links navbar-right">
-			<%if(currentUser.roleId === null){%>
-				<%} else{%>
-			<li class="dropdown" id="notification">
-				<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="true">
-					<i data-toggle="tooltip" title="Notifications" data-placement="bottom" class="fa fa-bell"></i>
-					<%if(notificationCount >= 1){%>
-					<span  class="label label-primary"><%=notificationCount%></span>
-					<%}else{%>
-						<%}%>
-				</a>
-				<ul class="dropdown-menu dropdown-alerts">
-					<li>
-						<div class="text-right link-block">
-							
-								<button  data-toggle="modal" onclick="readAll()" class="btn">Mark all as read</button>
-							
-						</div>
-					</li> <br>
-					<%if(latestNoti.length === 0){%>
-						<div>
-							<i class="fa fa-file-text" aria-hidden="true"></i>
-							No new notifications
-							<span class="float-right text-muted small"></span>
-						</div>
-						<%}%>
-					<%latestNoti.forEach(function(i){
-						let time
-						let age
-						let startTIme = new Date(i.createdAt)
-                        let endTime = new Date()
-						if (Math.abs(endTime - startTIme) / 3600000 > 24) {
-							time = Math.trunc(Math.abs(new Date() - startTIme) / 86400000)
-							age = time > 1? 'days': 'day'
-						}
-						else if (Math.abs(new Date() - startTIme) / 3600000 <= 1) {
-							time = Math.trunc(Math.abs(new Date() - startTIme) * 60 / 3600000)
-							age = time > 1? 'mins': 'min'
-						}
-						else if (Math.abs(new Date() - startTIme) / 3600000 <= 24) {
-							time = Math.trunc(Math.abs(new Date() - startTIme) / 3600000)
-							age = time > 1? 'hrs': 'hr'
-						}
-						%>
-					<li>
-						
-						<a href="api/v1/admin/personal-notifications">
-							<div>
-								<i class="fa fa-file-text" aria-hidden="true"></i>
-								<%if(i.title.length > 22){%>
-								<strong><%=i.title.substring(0, 22)%>...</strong>
-								<%} else{%>
-								<strong><%=i.title%></strong>
-								<%}%>
-								<span class="float-right text-muted small">
-									<%=time%> <%=age%> ago
-								</span>
-							</div>
-						</a>
-						<li class="dropdown-divider"></li>
-						
-						<%})%>
-					</li>
-					<li>
-						<div class="text-center link-block">
-							<a href="api/v1/admin/personal-notifications">
-								<strong>See All Alerts</strong>
-								<i class="fa fa-angle-right"></i>
-							</a>
-						</div>
-					</li>
-				</ul>
-				
-				<%}%>
-			</li>
-			<% if(currentUser.adminType === 'superAdmin'){%>
-			<li><a href="https://login.arkane.network/auth/realms/Arkane/protocol/openid-connect/auth?client_id=Arkane&state=d10edf26-f101-4fc2-9458-82bd94cb28aa&redirect_uri=https%3A%2F%2Fwallet.venly.io%2F%3Fauth_callback%3D1&scope=openid&response_type=code">
-					<i data-toggle="tooltip" title="Wallet" data-placement="bottom" class="fa fa-credit-card" aria-hidden="true" style="font-size: 18px;"></i>
-				</a></li>
-			<%}%>
+		</div> -->
+		
+		<ul style="margin-right:0 ;" class="nav navbar-top-links navbar-right">
+			
 			<li class="user-info-box welcome tooltipa">
 				<div class="dropdown d-flex">
 					<span class="prof-img">
 						<a data-toggle="tooltip" title="Profile" data-placement="bottom" href="api/v1/admin/profile/me">
-							<%if(currentUser.profilePicture.url === undefined){%>
+							<%if(currentUser.profilePicture === undefined){%>
 							<img alt="image" class="img-back" src="img/prf-img.png" /></a>
 							<%}else{%>
 							<img alt="image" class="img-back" src="<%=currentUser.profilePicture.url%>" /></a>

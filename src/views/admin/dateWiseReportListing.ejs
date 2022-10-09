@@ -1,167 +1,25 @@
 <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 <%- include('../partials/header')%>
+    <style>
+        .iti__country-list {
+            width: 428px;
+        }
+    </style>
+     
     <div id="wrapper">
-        <div style="padding: 7px 10px 0px" class="wrapper wrapper-content">
-            <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="ibox">            
-            <div class="ibox-content" id="history">
-                <%- include('../partials/navbar')%>
-
-            </div></div></div></div></div>
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="ibox">
                         <div class="ibox-content" id="history">
                             <div class="box-heading">
-                                <h2>API Call Tracker</h2>
+                                <h2 id="tracking_report_company" style="text-transform:capitalize ;">Tracking Report - </h2>
+                                <h2 id="tracking_report">Date - </h2>
                             </div>
                            
 
 
-                                                            <div class="row m-b-sm ">
-                                                                <div class="col-md-8 ">
-                                                                    <div class="bootstrap-tagsinput"
-                                                                        id="myDropdown">
-                                                                        <div
-                                                                            class="btn-group dropdown-filter">
-                                                                            <button type="button"
-                                                                                class="btn  dropdown-toggle m-r-sm"
-                                                                                data-toggle="dropdown"
-                                                                                aria-haspopup="true"
-                                                                                aria-expanded="false">
-                                                                                <i class="fa fa-filter"
-                                                                                    aria-hidden="true"></i>
-                                                                                Filter by
-                                                                                <span class="caret"></span>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li
-                                                                                    class="dropdown-actions d-flex-between">
-                                                                                    <div>
-                                                                                        <button
-                                                                                            onclick="filterApi()"
-                                                                                            type="button"
-                                                                                            class="btn btn-success btn-xs">Apply</button>
-                                                                                        <button
-                                                                                            onclick="resetFilter()"
-                                                                                            id="reset-filter-data"
-                                                                                            type="button"
-                                                                                            class="btn btn-default btn-xs">Reset</button>
-                                                                                    </div>
-                                                                                    <a
-                                                                                        onclick="closeFilter()">
-                                                                                        <i class="fa fa-times"
-                                                                                            aria-hidden="true"
-                                                                                            style="color: #000;"></i></a>
-                                                                                </li>
-                                                                                <li role="separator"
-                                                                                    class="divider"></li>
-
-
-                                                                               
-                                                                                <li>
-                                                                                    <label>Company Code</label>
-                                                                                    <select id="select_company_code"
-                                                                                    class="form-control ">
-                                                                                    <option value="">
-                                                                                        Select
-                                                                                    </option>
-                                                                                    <% companyCodes.forEach(function(e){%>
-                                                                                            <option
-                                                                                                value="<%=e.companyCode%>"><%=e.companyCode%>
-                                                                                              
-                                                                                            </option>
-                                                                                            <%})%>
-                                                                                            
-                                                                                        </select>
-                                                                                </li>
-                                                                               
-                                                                                <li role="separator"
-                                                                                    class="divider"></li>
-                                                                                <li class="" id="data_5">
-                                                                                    <div class="row">
-                                                                                        <div
-                                                                                            class="col-lg-6">
-                                                                                            <label>From</label>
-                                                                                            <div class="input-daterange input-group"
-                                                                                                id="datepicker">
-                                                                                                <span
-                                                                                                    class="input-group-addon"><i
-                                                                                                        class="fa fa-calendar"></i></span>
-                                                                                                <input
-                                                                                                    id="startDate"
-                                                                                                    type="text"
-                                                                                                    class="input-sm form-control"
-                                                                                                    name="start"
-                                                                                                    placeholder="Please select a date"
-                                                                                                    autocomplete="off">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="col-lg-6">
-                                                                                            <label>To</label>
-                                                                                            <div class="input-daterange input-group"
-                                                                                                id="datepicker">
-                                                                                                <span
-                                                                                                    class="input-group-addon"><i
-                                                                                                        class="fa fa-calendar"></i></span>
-                                                                                                <input
-                                                                                                    id="endDate"
-                                                                                                    type="text"
-                                                                                                    class="input-sm form-control"
-                                                                                                    name="start"
-                                                                                                    placeholder="Please select a date"
-                                                                                                    autocomplete="off">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                </li>
-
-                                                                            </ul>
-                                                                        </div>
-
-                                                                        <span id="filter-name-role"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetRoleFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-                                                                        <span id="filter-name-status"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetStatusFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-                                                                        <span id="filter-lastMonth"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetDateFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-
-                                                                    </div>
-                                                                </div>
-                                                                <!-- <div class="col-md-4 ">
-                                                                    <div class="text-right">
-                                                                        <div
-                                                                            class="text-right  d-flex-right">
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary m-l-sm"
-                                                                                data-toggle="modal"
-                                                                                data-target="#send-modal">Create
-                                                                                New
-                                                                                Admin</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> -->
-                                                            </div>
+                                                          
                                                             <div class="table-responsive coman-table"
                                                                 id="owner-detail-btn">
                                                                 <table class="table dataTables-example"
@@ -170,15 +28,17 @@
                                                                         <tr>
 
                                                                             <th>Company Code</th>
-                                                                            <th>Date</th>
-                                                                            <th>Hits</th>
-                                                                            <th>View</th>
-                                                                            <!-- <th>IP</th>
+                                                                            <th>Credential Code</th>
+                                                                            <th>Referral URL</th>
+                                                                            <th>Search ID</th>
+                                                                            <th>IP</th>
                                                                             <th>Origin</th>
                                                                             <th>Destination</th>
                                                                             <th>Class</th>
                                                                             <th>Currency</th>
-                                                                            <th>Date</th> -->
+                                                                            <th>Adults</th>
+                                                                            <th>Child</th>
+                                                                            <th>Infant</th>
                                                                         </tr>
                                                                     </thead>
 
@@ -318,6 +178,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script type="text/javascript">
+       var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    return false;
+};
+let date = getUrlParameter('date');
+let companyCode = getUrlParameter('companyCode');
+
+$('#tracking_report').append(new Date(date).toDateString())
+$('#tracking_report_company').append(companyCode)
+
         $(document).ready(function () {
             loadAdminDataTable()
 
@@ -338,8 +219,8 @@
             }
            
         })
-        function getUrl(companyCode, startDate, endDate) {
-            let url = `/api/v1/admin/tracker-reports.listing?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
+        function getUrl(date) {
+            let url = `/api/v1/admin/tracker-report.byDate/?${date}`
             return url
         }
 
@@ -388,54 +269,28 @@
                 // stateSave: true,
                 'serverSide': true,
                 "ajax": {
-                    "url": generateUrl,
+                    "url": `api/v1/admin/tracker-report.byDate?companyCode=${companyCode}&date=${date}`,
                     "type": "GET",
                     "datatype": "json",
                     // "dataSrc": ""
                 },
                 "columns": [
                     { render(data, type, row, meta){
-                        let text = `<div style="text-transform: capitalize;">${row._id.companyCode}</div>`
+                        let text = `<div style="text-transform: capitalize;">${row.companyCode}</div>`
                         return text
                     }},
-                    { render(data, type, row, meta){
-                        return row._id.date
-                    }},
-                    { render(data, type, row, meta){
-                        return row.count
-                    }},
-                    
-                    { 
-                        render(data, type, row, meta){
-                            let text = `<div class='action-btn'>
-                                            <a href="api/v1/admin/tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
-                                           `
-                         return text
-}
-}
-                    // {
-                    //     data:'IP'
-                    // },
-                    // { data: 'origin'
-                    // },
-                    // { data:'destination'
-                    // },
-                    // {
-                    //     data: 'classOfService'
-                    // },
-                    // {
-                    //     data: 'currency'
-                    // },
-                    // {
-                    //     mRender(data, type, row, meta) {
-                    //         const dt = new Date(row.createdAt)
-                    //         const month = dt.getMonth() + 1;
-                    //         let mm = month > 10 ? month : `0${month}`
-                    //         let dd = dt.getDate() + 1 > 10 ? dt.getDate() : `0${dt.getDate()}`
-                    //         return dd + '/' + mm + '/' + dt.getFullYear();
-
-                    //     },
-                    // },
+                    { data: 'credentialCode'},
+                    { data: 'referralUrl'},
+                    { data: 'searchId'},
+                    { data:'IP'},
+                    { data: 'origin'},
+                    { data:'destination'},
+                    { data: 'classOfService'},
+                    { data: 'currency'},
+                    { data: 'adults'},
+                    { data: 'child'},
+                    { data: 'infants'},
+                   
                    
                    
                 ]
