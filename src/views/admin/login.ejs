@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>API Tracker</title>
+	<base href="/" />
+	<link rel="icon" type="image/ico" href="img/logo-modal.png" />
+	<link href="css/bootstrap.min.css" rel="stylesheet" />
+	<link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
+	<link href="css/animate.css" rel="stylesheet" />
+	<link href="css/style.css" rel="stylesheet" />
+	<link href="css/mystyle-coman.css" rel="stylesheet" />
+	<link href="css/media.css" rel="stylesheet" />
+	<link href="css/admin-style.css" rel="stylesheet" />
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<style>
+		label.error {
+			color: #b51828;
+			display: inline-block;
+			margin-left: -152px;
+		}
+
+		.error,
+		.errors-wallet.error,
+		.buyError.error {
+			text-transform: none;
+		}
+
+		.form-group label {
+			font-size: 13px !important;
+		}
+	</style>
+</head>
+
+<body class="gray-bg">
+	<div id="wrapper">
+		<!-- log in html -->
+		<div class="coman-modal coman-modal-a" id="sign-in">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content text-center">
+					<h2>API Tracker</h2>
+					<img src="img/logo-modal.png" alt="" />
+					<h1>Sign In</h1>
+					<div id="server_error_msg" class="hide alert alert-danger dismissible" role="alert"></div>
+				
+													<form id="admin_login_form">
+														<div class="form-group">
+															<i class="fa fa-envelope-o" aria-hidden="true"></i>
+															<input id="admin_email" type="text" class="form-control"
+																placeholder="Email" maxlength="256" name="email" />
+															<p style="font-size: 14px; color: rgb(185, 23, 23); text-align: left;"
+																id="error-msg-email"></p>
+
+														</div>
+														<div class="form-group pass-word">
+															<i class="fa fa-lock" aria-hidden="true"></i>
+															<input id="admin_password" type="password"
+																class="form-control" maxlength="256"
+																placeholder="Password" name="password" />
+																<span toggle="#admin_password" class="fa fa-eye field-icon toggle-password"></span>
+														</div>
+														<div class="forgot-link m-t-md text-center">
+															<a href="#" data-toggle="modal"
+																data-target="#forgot-pw-modal"
+																data-dismiss="modal">Forgot
+																Password?</a>
+														</div>
+														<button onclick="login()" id="submitForm" disabled="disabled"
+															type="button" class="btn btn-primary">SIGN IN
+														</button>
+
+													</form>
+				</div>
+			</div>
+		</div>
+
+		<!-- log in html -->
+	</div>
+	<div class="modal coman-modal  fade" id="2fa-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog  modal-a" role="document">
+			<div class="modal-content text-center">
+				<button type="button" id="close1" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+				<h2>Toekenz Collectibles</h2>
+				<img src="img/logo-modal.png" alt="" />
+				<h2>Verify Email</h2>
+				<p>Enter an OTP sent to your registered email address.</p>
+				<form id="otp-form">
+					<div id="form">
+						<input id="otp1" type="text" class="from-control inputs" maxlength="1"
+							oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+						<input id="otp2" type="text" class="from-control inputs" maxlength="1"
+							oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+						<input id="otp3" type="text" class="from-control inputs" maxlength="1"
+							oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+						<input id="otp4" type="text" class="from-control inputs" maxlength="1"
+							oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+						<div style="margin-top: 10px;">
+
+							<small id="success-msg" style="font-size: 14px; color: rgb(34, 154, 40);">
+							</small>
+							<small id="error-msg-otp" style="font-size: 14px; color: rgb(198, 25, 25);">
+							</small>
+						</div>
+						<div style="margin-top: -6px;" class="clearfix logout d-flex-around">
+							<button id="resend-otp" data-toggle="modal" type="button" class="btn btn-primary m-t-lg"
+								style="max-width: 200px;">Resend</button>
+							<button id="verify-otp" type="button" class="btn btn-primary  m-t-lg" data-toggle=" modal"
+								style="max-width: 200px;">Submit</button>
+						</div>
+					</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal coman-modal fade" id="success-msg1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-a" role="document">
+			<div class="modal-content text-center">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+
+				<h1>Successful</h1>
+				<div class="success-msg-icon">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+				</div>
+				<p>
+					We have sent you a password reset link on your
+					registered email address.
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="modal coman-modal fade" id="forgot-pw-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-a" role="document">
+			<div class="modal-content text-center">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<!--  <a href="dashboard.html"> <img src="img/logo-modal.png" alt=""></a> -->
+				<h2>Forgot Password</h2>
+				<form id="reset-password-form">
+					<div id="forgot-pw-error" class="hide alert alert-danger">
+						<button type="button" class="close" aria-label="Close"><span
+								aria-hidden="true">&times;</span></button>
+						<p style="font-size: 14px;
+						    color: rgb(185, 23, 23); text-align: left;" id="error-msg"></p>
+					</div>
+					<p id="reset-link-text">
+						Please Enter the Registered Email Address to Receive
+						Password Reset Link:
+					</p>
+					<div class="form-group">
+						<i class="fa fa-lock" aria-hidden="true"></i>
+						<input type="text" maxlength="256" id="forgot-password-email" class="form-control"
+							placeholder="Email" />
+						<small style="color:rgb(185, 23, 23); font-size: 14px; margin-left: -266px;;"
+							id="new_password_error"></small>
+					</div>
+
+					<button id="reset-pw-link" type="button" class="btn btn-primary text-uppercase" data-toggle="modal">
+						submit
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Mainly scripts -->
+	<script src="js/jquery-2.1.1.js"></script>
+	<script src="js/inspinia.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+	<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+	<!-- Custom and plugin javascript -->
+	<script src="js/plugins/pace/pace.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script src="js/admin/script.js"></script>
+	<script type="text/javascript">
+		$(".toggle-password").click(function () {
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+		$('#submitForm').attr('disabled', true)
+		$(function () {
+			$('#admin_email, #admin_password').keyup(function () {
+				if ($('#admin_email').val() !== '' && $('#admin_password').val() !== '') {
+					$('#submitForm').attr('disabled', false)
+				}
+				else {
+					$('#submitForm').attr('disabled', true)
+				}
+			})
+
+		})
+
+		$(".inputs").keyup(function (e) {
+			var digit = $('input.inputs')
+			if (this.value.length == this.maxLength) {
+				$(this).next('.inputs').focus();
+			}
+			if (e.keyCode == 8) {
+				var digit = $('input.inputs')
+				$(this).prev('.inputs').focus();
+			}
+		});
+
+		function login() {
+			$('#submitForm').attr('disabled', true)
+			let data = {}
+			let email = $('#admin_email').val().toLowerCase().trim()
+			let password = $('#admin_password').val().trim()
+			data.email = email
+			data.password = password
+			let emailRegex = /(?=^(?:[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]\.?){0,63}[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]@[A-Za-z0-9\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?(?:\.[A-Za-z\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?)*$)(?=^.{3,254}$)/
+			if (!emailRegex.test(email)) {
+				$('#error-msg-email').text('Please enter a valid email address.')
+				$('#error-msg-email').removeClass('hide')
+			} else {
+				$.ajax({
+					url: 'api/v1/admin/login',
+					type: 'POST',
+					data: JSON.stringify(data),
+					contentType: 'application/json',
+					success: () => {
+						location.href = '/api/v1/admin/tracker-reports'
+					},
+					error: (err) => {
+						$('#submitForm').attr('disabled', false)
+						$('#error-msg-email').addClass('hide')
+						toastr.error(err.responseJSON.msg, 'Error')
+					}
+				})
+
+			}
+		}
+
+		$('#2fa-modal').on('hidden.bs.modal', function () {
+			$('#submitForm').attr('disabled', false)
+			timeLeft = -1
+			$('#success-msg').text('')
+			$('#error-msg-otp').text('')
+			$('#resend-otp').attr('disabled', false);
+			$('#resend-otp').text('Resend');
+			$('#form').trigger('reset')
+		})
+		var timeLeft = 300
+		$('#2fa-modal').on('show.bs.modal', function () {
+			timeLeft = 300
+			let data = {}
+			data.email = $('#admin_email').val()
+			$('#resend-otp').off('click').on('click', function () {
+				timeLeft = 300
+				$('#success-msg').text('OTP sent successfully!')
+				$.ajax({
+					url: `/api/v1/admin/resend-email-otp`,
+					type: 'PUT',
+					data: JSON.stringify(data),
+					contentType: 'application/json',
+					success: (data) => {
+						$('#success-msg').removeClass('hide')
+
+						$('#error-msg-otp').addClass('hide')
+						$('#error-msg-otp').text('')
+					},
+					error: (err) => {
+
+					}
+				})
+				var timerId = setInterval(countdown, 100);
+
+				function countdown() {
+					if (timeLeft == -1) {
+						clearTimeout(timerId);
+						$('#success-msg').text('')
+						$('#resend-otp').attr('disabled', false);
+						$('#resend-otp').text('Resend');
+
+					} else {
+						$('#resend-otp').attr('disabled', true)
+						$('#resend-otp').text(`Please wait ${Math.ceil(timeLeft / 10)}s`)
+						timeLeft--;
+					}
+				}
+
+			})
+			$('#verify-otp').off('click').on('click', function () {
+				$('#verify-otp').attr('disabled', true)
+				$('#verify-otp').text('Verifying...')
+
+				let data = {}
+				let otp1 = $('#otp1').val()
+				let otp2 = $('#otp2').val()
+				let otp3 = $('#otp3').val()
+				let otp4 = $('#otp4').val()
+				let otp = otp1 + otp2 + otp3 + otp4
+				data.otp = parseInt(otp)
+				if (!otp1 || !otp2 || !otp3 || !otp4) {
+					$('#verify-otp').text('Submit')
+					$('#verify-otp').attr('disabled', false)
+					$('#success-msg').addClass('hide')
+					$('#success-msg').text('')
+					$('#error-msg-otp').removeClass('hide')
+					$('#error-msg-otp').text('Please enter OTP.')
+				} else {
+					$.ajax({
+						url: `/api/v1/admin/login-2fa`,
+						type: 'POST',
+						data: JSON.stringify(data),
+						contentType: 'application/json',
+						success: () => {
+							$('#error-msg-otp').text('')
+							$('#error-msg-otp').addClass('hide')
+							location.href = '/api/v1/admin/dashboard'
+						},
+						error: (err) => {
+							$('#verify-otp').text('Submit')
+							$('#verify-otp').attr('disabled', false)
+							$('#success-msg').text('')
+							$('#error-msg-otp').removeClass('hide')
+							$('#error-msg-otp').text(err.responseJSON.msg)
+						}
+					})
+				}
+
+			})
+		})
+
+		$('#2fa-modal').on('hidden.bs.modal', function () {
+			$('#verify-otp').text('Submit')
+			$('#error-msg-otp').text('')
+			$('#error-msg-otp').addClass('hide')
+			$('#otp-form').trigger('reset')
+		})
+		$(document).ready(function () {
+			$('.alert .close').click(function () {
+				$('#forgot-pw-error').addClass('hide');
+			});
+			toastr.options = {
+				closeButton: true,
+				preventDuplicates: true,
+				progressBar: true,
+			}
+	
+
+		})
+
+		$('#forgot-pw-modal').on('hidden.bs.modal', function () {
+			$('#forgot-password-email').val('')
+			$('#reset-link-text').text('')
+			$('#forgot-pw-error').addClass('hide')
+			$('#new_password_error').text('')
+			$('#reset-password-form').trigger('reset')
+			$(this).closest("label").find(".error").empty();
+			$(this).removeClass("error");
+
+		})
+
+		$('#forgot-pw-modal').on('show.bs.modal', function () {
+			$('#reset-pw-link').attr('disabled', true);
+			$('#forgot-password-email').keyup(function () {
+				if ($('#forgot-password-email').val().length != 0) {
+					$('#reset-pw-link').attr('disabled', false)
+				}
+				else {
+					$('#new_password_error').text('')
+					$('#reset-pw-link').attr('disabled', true);
+				}
+			})
+			$('#reset-pw-link').off('click').on('click', function () {
+				let data = {}
+				let emailRegex = /(?=^(?:[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]\.?){0,63}[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]@[A-Za-z0-9\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?(?:\.[A-Za-z\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?)*$)(?=^.{3,254}$)/
+				data.email = $('#forgot-password-email').val().toLowerCase()
+				if (!emailRegex.test(data.email)) {
+					$('#reset-link-text').text('')
+					$('#forgot-pw-error').addClass('hide')
+					$('#new_password_error').text('Please provide a valid email address.')
+				} else {
+					$.ajax({
+						url: `${window.location.origin}/api/v1/admin/forgotPassword`,
+						type: 'POST',
+						data: JSON.stringify(data),
+						contentType: 'application/json',
+						success: (data) => {
+							$('#new_password_error').text('')
+							$('#forgot-pw-modal').modal('hide')
+							$('#forgot-password-email').val('')
+							$('#success-msg1').modal('show')
+							$('#success-msg1').on('hidden.bs.modal', function () {
+								window.location.reload()
+							})
+
+						},
+						error: (err) => {
+							$('#new_password_error').text(err.responseJSON.msg)
+							$('#reset-link-text').text('')
+						}
+
+
+					})
+				}
+			})
+
+		})
+
+	</script>
+	<script type="text/javascript">
+
+
+	</script>
+</body>
+
+</html>

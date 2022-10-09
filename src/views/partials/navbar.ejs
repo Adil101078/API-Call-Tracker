@@ -1,0 +1,202 @@
+<div class="row top-menu2">
+	<nav class="navbar navbar-static-top dark-bg-header top-menu" role="navigation" style="margin-bottom: 0">
+		<div class="navbar-header">
+			<a class="navbar-minimalize minimalize-styl-2 btn btn-primary"><i data-toggle="tooltip" data-placement="bottom" title="Menu" class="fa fa-bars"></i>
+			</a>
+		</div>
+		<ul class="nav navbar-top-links navbar-right">
+			<%if(currentUser.roleId === null){%>
+				<%} else{%>
+			<li class="dropdown" id="notification">
+				<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="true">
+					<i data-toggle="tooltip" title="Notifications" data-placement="bottom" class="fa fa-bell"></i>
+					<%if(notificationCount >= 1){%>
+					<span  class="label label-primary"><%=notificationCount%></span>
+					<%}else{%>
+						<%}%>
+				</a>
+				<ul class="dropdown-menu dropdown-alerts">
+					<li>
+						<div class="text-right link-block">
+							
+								<button  data-toggle="modal" onclick="readAll()" class="btn">Mark all as read</button>
+							
+						</div>
+					</li> <br>
+					<%if(latestNoti.length === 0){%>
+						<div>
+							<i class="fa fa-file-text" aria-hidden="true"></i>
+							No new notifications
+							<span class="float-right text-muted small"></span>
+						</div>
+						<%}%>
+					<%latestNoti.forEach(function(i){
+						let time
+						let age
+						let startTIme = new Date(i.createdAt)
+                        let endTime = new Date()
+						if (Math.abs(endTime - startTIme) / 3600000 > 24) {
+							time = Math.trunc(Math.abs(new Date() - startTIme) / 86400000)
+							age = time > 1? 'days': 'day'
+						}
+						else if (Math.abs(new Date() - startTIme) / 3600000 <= 1) {
+							time = Math.trunc(Math.abs(new Date() - startTIme) * 60 / 3600000)
+							age = time > 1? 'mins': 'min'
+						}
+						else if (Math.abs(new Date() - startTIme) / 3600000 <= 24) {
+							time = Math.trunc(Math.abs(new Date() - startTIme) / 3600000)
+							age = time > 1? 'hrs': 'hr'
+						}
+						%>
+					<li>
+						
+						<a href="api/v1/admin/personal-notifications">
+							<div>
+								<i class="fa fa-file-text" aria-hidden="true"></i>
+								<%if(i.title.length > 22){%>
+								<strong><%=i.title.substring(0, 22)%>...</strong>
+								<%} else{%>
+								<strong><%=i.title%></strong>
+								<%}%>
+								<span class="float-right text-muted small">
+									<%=time%> <%=age%> ago
+								</span>
+							</div>
+						</a>
+						<li class="dropdown-divider"></li>
+						
+						<%})%>
+					</li>
+					<li>
+						<div class="text-center link-block">
+							<a href="api/v1/admin/personal-notifications">
+								<strong>See All Alerts</strong>
+								<i class="fa fa-angle-right"></i>
+							</a>
+						</div>
+					</li>
+				</ul>
+				
+				<%}%>
+			</li>
+			<% if(currentUser.adminType === 'superAdmin'){%>
+			<li><a href="https://login.arkane.network/auth/realms/Arkane/protocol/openid-connect/auth?client_id=Arkane&state=d10edf26-f101-4fc2-9458-82bd94cb28aa&redirect_uri=https%3A%2F%2Fwallet.venly.io%2F%3Fauth_callback%3D1&scope=openid&response_type=code">
+					<i data-toggle="tooltip" title="Wallet" data-placement="bottom" class="fa fa-credit-card" aria-hidden="true" style="font-size: 18px;"></i>
+				</a></li>
+			<%}%>
+			<li class="user-info-box welcome tooltipa">
+				<div class="dropdown d-flex">
+					<span class="prof-img">
+						<a data-toggle="tooltip" title="Profile" data-placement="bottom" href="api/v1/admin/profile/me">
+							<%if(currentUser.profilePicture.url === undefined){%>
+							<img alt="image" class="img-back" src="img/prf-img.png" /></a>
+							<%}else{%>
+							<img alt="image" class="img-back" src="<%=currentUser.profilePicture.url%>" /></a>
+							<%}%>
+					</span>
+					<a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="false">
+						<span class="clear">
+							<span class="text-muted text-xs block">
+								<%=currentUser.fullName%><b class="caret"></b>
+
+							</span>
+						</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="api/v1/admin/profile/me">Profile</a></li>
+
+						<li>
+							<a data-toggle="modal" data-dismiss="modal" data-target="#modal-logout">Logout</a>
+						</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</nav>
+	<div class="modal coman-modal fade" id="modal-logout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content text-center">
+				<h2>Are you sure you want to logout ?</h2>
+				<div class="clearfix logout">
+					<button type="submit" class="btn   btn-default m-r-sm" data-dismiss="modal">No</button>
+					<button type="submit" class="btn btn-primary"
+						onclick="logout()">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal coman-modal  fade" id="modal-wallet" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog  modal-a" role="document">
+			<div class="modal-content text-center">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h2> Connect Wallet</h2>
+				<img src="img/wallet.png" width="150" style="width: 300px;">
+				<div id="error-msg" class="hide alert alert-danger alet-dismissible" role="alert">
+					<button type="button" class="close" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+					<p style="font-size: 14px; color: rgb(183 7 7);" id="error-msg1"></p>
+				</div>
+				<input type="hidden" class="form-control" id="roleId" value="">
+				<div class="from-group text-left">
+					<h4>Email</h4>
+					<input type="text" class="form-control edit-role  cal-input" id="editRole" value=""
+						placeholder="Enter your email">
+					<small style="font-size: 14px; color: rgb(191, 36, 36);" id="error-msg-editName"></small>
+				</div>
+				<div class="from-group text-left">
+					<h4>Password</h4>
+					<input type="password" class="form-control edit-role  cal-input" id="editRole" value=""
+						placeholder="Enter your password">
+					<small style="font-size: 14px; color: rgb(191, 36, 36);" id="error-msg-editName"></small>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal coman-modal  fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content text-center">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<div class="success-msg-icon">
+				<i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+			</div>
+			<h2>Marked as read successfully !!</h2>
+		</div>
+	</div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script type="text/javascript">
+	function logout(){
+		$.ajax({
+			url:`/api/v1/admin/logout`,
+			type:'PATCH',
+			contentType:'application/json',
+			success: ()=>{
+				window.setTimeout(()=>{
+					window.location.href = 'api/v1/admin/login'
+				}, 500)
+			},
+			error: (err)=>{
+				toastr.error(err.responseJSON.msg)
+			}
+		})
+	}
+	function readAll(){
+		$.ajax({
+			url:`api/v1/admin/update-all-notifications`,
+			type: 'PATCH',
+			contentType: 'application/json',
+			success:()=>{
+				$('#modal-notification').modal('show')
+			},
+			error: ()=>{
+				toastr.error(err.responseJSON.msg)
+			}
+		})
+	}
+</script>

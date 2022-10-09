@@ -1,0 +1,12 @@
+node_modules
+.env
+logs
+.vscode
+.history
+.env.local
+lib
+dist
+#Hardhat files
+cache
+artifacts
+logs

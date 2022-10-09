@@ -1,0 +1,838 @@
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<%- include('../partials/header')%>
+    <style>
+        .iti__country-list {
+            width: 428px;
+        }
+    </style>
+    <div id="wrapper">
+      
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="ibox">
+                        <div class="ibox-content" id="history">
+                            <div class="box-heading">
+                                <h2>API Call Tracker</h2>
+                            </div>
+                           
+
+
+                                                            <div class="row m-b-sm ">
+                                                                <div class="col-md-8 ">
+                                                                    <div class="bootstrap-tagsinput"
+                                                                        id="myDropdown">
+                                                                        <div
+                                                                            class="btn-group dropdown-filter">
+                                                                            <button type="button"
+                                                                                class="btn  dropdown-toggle m-r-sm"
+                                                                                data-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
+                                                                                <i class="fa fa-filter"
+                                                                                    aria-hidden="true"></i>
+                                                                                Filter by
+                                                                                <span class="caret"></span>
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                <li
+                                                                                    class="dropdown-actions d-flex-between">
+                                                                                    <div>
+                                                                                        <button
+                                                                                            onclick="filterApi()"
+                                                                                            type="button"
+                                                                                            class="btn btn-success btn-xs">Apply</button>
+                                                                                        <button
+                                                                                            onclick="resetFilter()"
+                                                                                            id="reset-filter-data"
+                                                                                            type="button"
+                                                                                            class="btn btn-default btn-xs">Reset</button>
+                                                                                    </div>
+                                                                                    <a
+                                                                                        onclick="closeFilter()">
+                                                                                        <i class="fa fa-times"
+                                                                                            aria-hidden="true"
+                                                                                            style="color: #000;"></i></a>
+                                                                                </li>
+                                                                                <li role="separator"
+                                                                                    class="divider"></li>
+
+
+                                                                               
+                                                                                <li>
+                                                                                    <label>Company Code</label>
+                                                                                    <select id="select_company_code"
+                                                                                    class="form-control ">
+                                                                                    <option value="">
+                                                                                        Select
+                                                                                    </option>
+                                                                                    <% companyCodes.forEach(function(e){%>
+                                                                                            <option
+                                                                                                value="<%=e.companyCode%>"><%=e.companyCode%>
+                                                                                              
+                                                                                            </option>
+                                                                                            <%})%>
+                                                                                            
+                                                                                        </select>
+                                                                                </li>
+                                                                               
+                                                                                <li role="separator"
+                                                                                    class="divider"></li>
+                                                                                <li class="" id="data_5">
+                                                                                    <div class="row">
+                                                                                        <div
+                                                                                            class="col-lg-6">
+                                                                                            <label>From</label>
+                                                                                            <div class="input-daterange input-group"
+                                                                                                id="datepicker">
+                                                                                                <span
+                                                                                                    class="input-group-addon"><i
+                                                                                                        class="fa fa-calendar"></i></span>
+                                                                                                <input
+                                                                                                    id="startDate"
+                                                                                                    type="text"
+                                                                                                    class="input-sm form-control"
+                                                                                                    name="start"
+                                                                                                    placeholder="Please select a date"
+                                                                                                    autocomplete="off">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div
+                                                                                            class="col-lg-6">
+                                                                                            <label>To</label>
+                                                                                            <div class="input-daterange input-group"
+                                                                                                id="datepicker">
+                                                                                                <span
+                                                                                                    class="input-group-addon"><i
+                                                                                                        class="fa fa-calendar"></i></span>
+                                                                                                <input
+                                                                                                    id="endDate"
+                                                                                                    type="text"
+                                                                                                    class="input-sm form-control"
+                                                                                                    name="start"
+                                                                                                    placeholder="Please select a date"
+                                                                                                    autocomplete="off">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                </li>
+
+                                                                            </ul>
+                                                                        </div>
+
+                                                                        <span id="filter-name-role"
+                                                                            class="tag label label-primary hide">
+
+                                                                            <a onclick="resetRoleFilter()"
+                                                                                style="color: #fff;"><i
+                                                                                    class="fa fa-times"
+                                                                                    aria-hidden="true"></i></a>
+                                                                        </span>
+                                                                        <span id="filter-name-status"
+                                                                            class="tag label label-primary hide">
+
+                                                                            <a onclick="resetStatusFilter()"
+                                                                                style="color: #fff;"><i
+                                                                                    class="fa fa-times"
+                                                                                    aria-hidden="true"></i></a>
+                                                                        </span>
+                                                                        <span id="filter-lastMonth"
+                                                                            class="tag label label-primary hide">
+
+                                                                            <a onclick="resetDateFilter()"
+                                                                                style="color: #fff;"><i
+                                                                                    class="fa fa-times"
+                                                                                    aria-hidden="true"></i></a>
+                                                                        </span>
+
+                                                                    </div>
+                                                                </div>
+                                                                <!-- <div class="col-md-4 ">
+                                                                    <div class="text-right">
+                                                                        <div
+                                                                            class="text-right  d-flex-right">
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary m-l-sm"
+                                                                                data-toggle="modal"
+                                                                                data-target="#send-modal">Create
+                                                                                New
+                                                                                Admin</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+                                                            </div>
+                                                            <div class="table-responsive coman-table"
+                                                                id="owner-detail-btn">
+                                                                <table class="table dataTables-example"
+                                                                    style="width: 100%;">
+                                                                    <thead>
+                                                                        <tr>
+
+                                                                            <th>Date</th>
+                                                                            <th>Company Code</th>
+                                                                            <th>Hits</th>
+                                                                            <th>View</th>
+                                                                            <!-- <th>IP</th>
+                                                                            <th>Origin</th>
+                                                                            <th>Destination</th>
+                                                                            <th>Class</th>
+                                                                            <th>Currency</th>
+                                                                            <th>Date</th> -->
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                </table>
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+    <div class="modal coman-modal fade" id="modal-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3>Are you sure you want to Delete Admin?</h3>
+                <div class="clearfix">
+                    <button type="submit" class="btn   btn-default m-r-sm" data-dismiss="modal">No</button>
+                    <button type="button" id="delete-admin" class="btn btn-primary" data-toggle="modal"
+                        data-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal  fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-a" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="success-msg-icon">
+                    <i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+                </div>
+                <h2>Admin Deleted Successfully !!</h2>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal  fade" id="modal-admin-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-a" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="success-msg-icon">
+                    <i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+                </div>
+                <h2> Admin onboarding request has been sent. Admin can set password via link.</h2>
+            </div>
+        </div>
+    </div>
+   
+    <div class="modal coman-modal fade" id="modal-disable-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="p-t-md">Are you sure you want to disable the admin ? He will not be able to access any of the
+                    modules</p>
+                <div class="clearfix logout">
+                    <button type="submit" class="btn   btn-default m-r-sm" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="disable-admin" class="btn btn-primary" data-toggle="modal"
+                        data-dismiss="modal">Disable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal  fade" id="edit-Disable-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-a" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="success-msg-icon">
+                    <i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+                </div>
+                <h2> Disabled Successfully !!</h2>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal fade" id="modal-enable-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <p class="p-t-md">Are you sure you want to enable the admin ?</p>
+                <div class="clearfix logout">
+                    <button type="submit" class="btn   btn-default m-r-sm" data-dismiss="modal">Cancel</button>
+                    <button type="button" id="enable-admin" class="btn btn-primary" data-toggle="modal"
+                        data-dismiss="modal">Enable</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal  fade" id="edit-Enable-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-a" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="success-msg-icon">
+                    <i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+                </div>
+                <h2> Enabled Successfully !!</h2>
+            </div>
+        </div>
+    </div>
+    <!-- Mainly scripts -->
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/inspinia.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="js/bootstrap-datepicker.min.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="js/admin/script.js"></script>
+    <script src="js/plugins/pace/pace.min.js"></script>
+    <script src="js/plugins/dataTables/datatables.min.js"></script>
+    <!-- d3 and c3 charts -->
+    <script src="js/d3.min.js"></script>
+    <script src="js/c3.min.js"></script>
+    <!-- Date range picker -->
+    <script src="js/daterangepicker.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            loadAdminDataTable()
+
+            $(document).on('click', '.dropdown-menu li', function (e) {
+                e.stopPropagation();
+            }); $(document).on('click', '.dropdown-menu li  option', function (e) {
+                e.stopPropagation();
+            });
+            $('#myDropdown .dropdown-menu').on({
+                "click": function (e) {
+                    e.stopPropagation();
+                }
+            })
+            toastr.options = {
+                closeButton: true,
+                preventDuplicates: true,
+                progressBar: true,
+            }
+           
+        })
+        function getUrl(role, status, startDate, endDate) {
+            let url = `/api/v1/admin/tracker-reports.listing?role=${role}&status=${status}&startDate=${startDate}&endDate=${endDate}`
+            return url
+        }
+
+        function loadAdminDataTable() {
+            let currentDate = moment().utc().toISOString()
+            let lastMonth = moment().subtract(30, 'days').utc().toISOString()
+            let search = $('#select-role').val()
+            let status = $('#admin-status').val()
+            let start = $('#startDate').val()
+            let end = $('#endDate').val()
+            let last30Days = $('#last-30-days').val()
+            let startDate = ''
+            let endDate = ''
+
+            $('#last-30-days').on('change', function () {
+                if ($('#last-30-days').val() == 'Last 30 days') {
+                    $('#startDate').attr('disabled', true)
+                    $('#endDate').attr('disabled', true)
+                } else {
+                    $('#startDate').attr('disabled', false)
+                    $('#endDate').attr('disabled', false)
+                }
+            })
+            $('#startDate').change(function () {
+                start = this.value
+            })
+
+            $('#endDate').on('change', function () {
+                end = this.value
+            })
+
+            if (start && end) {
+                startDate = moment(start, 'DD/MM/YYYY').format("YYYY-MM-DD");
+                endDate = moment(end, 'DD/MM/YYYY').format("YYYY-MM-DD");
+                if (!(new Date(startDate).getTime() <= new Date(endDate).getTime()) || new Date(startDate).getTime() >= new Date(moment()).getTime()) {
+                    toastr.error('Selected date range is invalid.', 'Error')
+                    $('#filter-name-role, #filter-name-status, #filter-lastMonth').addClass('hide')
+                    return;
+                }
+            }
+
+            if (last30Days) {
+                startDate = moment(lastMonth).format("YYYY-MM-DD")
+                endDate = moment(currentDate).format("YYYY-MM-DD")
+            }
+
+            $('#select-role').on('change', function () {
+                search = this.value
+            });
+
+            $('#admin-status').on('change', function () {
+                status = this.value
+            })
+
+            let generateUrl = getUrl(search, status, startDate, endDate)
+            // Initiate datatable
+
+            $('.dataTables-example').DataTable({
+                destroy: true,
+                "search": true,
+                "processing": true,
+                "filter": true,
+                "orderMulti": false,
+                // stateSave: true,
+                'serverSide': true,
+                "ajax": {
+                    "url": generateUrl,
+                    "type": "GET",
+                    "datatype": "json",
+                    // "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "_id" },
+                    { "data": "companyCode" },
+                    { 'data': 'count' },
+                    { 
+                        render(data, type, row, meta){
+                            let text = `<div class='action-btn'>
+                                            <a href="api/v1/admin/adminProfile/"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
+                                           `
+                         return text
+}
+}
+                    // {
+                    //     data:'IP'
+                    // },
+                    // { data: 'origin'
+                    // },
+                    // { data:'destination'
+                    // },
+                    // {
+                    //     data: 'classOfService'
+                    // },
+                    // {
+                    //     data: 'currency'
+                    // },
+                    // {
+                    //     mRender(data, type, row, meta) {
+                    //         const dt = new Date(row.createdAt)
+                    //         const month = dt.getMonth() + 1;
+                    //         let mm = month > 10 ? month : `0${month}`
+                    //         let dd = dt.getDate() + 1 > 10 ? dt.getDate() : `0${dt.getDate()}`
+                    //         return dd + '/' + mm + '/' + dt.getFullYear();
+
+                    //     },
+                    // },
+                   
+                   
+                ]
+            })
+
+        }
+
+
+        $('.input-group.date').datepicker(
+            { format: "dd.mm.yyyy" }
+        );
+        var datePicker = $(".calendar").datepicker({});
+        var t;
+        $(document).on(
+            'DOMMouseScroll mousewheel scroll',
+            '#myModal',
+            function () {
+                window.clearTimeout(t);
+                t = window.setTimeout(function () {
+                    $('.calendar').datepicker('')
+                }, 100);
+            }
+        );
+        $('#data_5 .input-daterange').datepicker({
+            format: 'dd/mm/yyyy',
+            keyboardNavigation: false,
+            forceParse: false,
+            autoclose: true
+        });
+
+
+
+        function filterApi() {
+
+            if ($('#admin-status').val() == 'true') {
+                $('#filter-name-status').removeClass('hide')
+                $('#filter-name-status').text('Active')
+                $('#filter-name-status').append('<a onclick="resetStatusFilter()" style = "color: #fff;" > <i class="fa fa-times" aria-hidden="true"></i></a >')
+                loadAdminDataTable()
+            }
+            if ($('#admin-status').val() == 'false') {
+                $('#filter-name-status').removeClass('hide')
+                $('#filter-name-status').text('Inactive')
+                $('#filter-name-status').append('<a onclick="resetStatusFilter()" style = "color: #fff;" > <i class="fa fa-times" aria-hidden="true"></i></a >')
+                loadAdminDataTable()
+            }
+
+            if ($('#select-role').val() !== '') {
+                $('#filter-name-role').removeClass('hide')
+                $('#filter-name-role').text($('#select-role').val())
+                $('#filter-name-role').append('<a onclick="resetRoleFilter()" style = "color: #fff;" > <i class="fa fa-times" aria-hidden="true"></i></a >')
+                loadAdminDataTable()
+            }
+            if ($('#last-30-days').val() !== '') {
+                $('#startDate').val('')
+                $('#endDate').val('')
+                $('#filter-lastMonth').removeClass('hide')
+                $('#filter-lastMonth').text($('#last-30-days').val())
+                $('#filter-lastMonth').append('<a onclick="resetDateFilter()" style = "color: #fff;" > <i class="fa fa-times" aria-hidden="true"></i></a >')
+                loadAdminDataTable()
+            }
+            if ($('#startDate').val() !== '' && $('#endDate').val() !== '') {
+                let start = $('#startDate').val()
+                let end = $('#endDate').val()
+                $('#filter-lastMonth').removeClass('hide')
+                $('#filter-lastMonth').text(`${start} - ${end}`)
+                $('#filter-lastMonth').append('<a onclick="resetDateFilter()" style = "color: #fff;" > <i class="fa fa-times" aria-hidden="true"></i></a >')
+                loadAdminDataTable()
+            }
+        }
+
+        function resetDateFilter() {
+            $('#startDate, #endDate, #last-30-days').val('')
+            $('#filter-lastMonth').addClass('hide')
+            loadAdminDataTable()
+        }
+
+        function resetRoleFilter() {
+            $('#select-role').val('')
+            $('#filter-name-role').addClass('hide')
+            loadAdminDataTable()
+
+        }
+
+        function resetStatusFilter() {
+            $('#filter-name-status').addClass('hide')
+            $('#admin-status').val('')
+            loadAdminDataTable()
+
+        }
+        function resetFilter() {
+            $('#startDate').attr('disabled', false)
+            $('#endDate').attr('disabled', false)
+            $('#admin-status').val('')
+            $('#select-role').val('')
+            $('#startDate').val('')
+            $('#endDate').val('')
+            $('#last-30-days').val('')
+            $('#filter-name-role, #filter-name-status, #filter-lastMonth').addClass('hide')
+            loadAdminDataTable()
+
+        }
+
+        function closeFilter() {
+            $('.dropdown-filter').removeClass('open')
+
+        }
+        const phoneInputField = document.querySelector("#admin_number");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            separateDialCode: true,
+        });
+        const adminPhone = document.querySelector("#admin-number");
+        const adminPhoneInput = window.intlTelInput(adminPhone, {
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            separateDialCode: true,
+        })
+        $('#modal-delete').on('show.bs.modal', function (e) {
+            let adminId = $(e.relatedTarget).data('id')
+            let roleName = $(e.relatedTarget).data('role')
+            $('#delete-admin').off().on('click', function () {
+
+                $.ajax({
+                    url: `${window.location.origin}/api/v1/admin/delete-admin/${adminId}`,
+                    type: 'DELETE',
+                    success: (data) => {
+                        $('#modal-success').modal('show')
+                        $('.datatables-example').DataTable().ajax.reload();
+                        $('#modal-success').on('hidden.bs.modal', function () {
+
+                        })
+                    },
+                    error: (err) => {
+                        toastr.error(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+        $('#modal-disable-success').on('show.bs.modal', function (e) {
+            let adminId = $(e.relatedTarget).data('id')
+            $('#disable-admin').off().on('click', function () {
+
+                $.ajax({
+                    url: `${window.location.origin}/api/v1/admin/disable-admin/${adminId}`,
+                    type: 'PATCH',
+                    success: (data) => {
+                        $('#edit-Disable-success').modal('show')
+                        loadAdminDataTable()
+                    },
+                    error: (err) => {
+                        toastr.error(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+        $('#modal-enable-success').on('show.bs.modal', function (e) {
+            let adminId = $(e.relatedTarget).data('id')
+            $('#enable-admin').off().on('click', function () {
+
+                $.ajax({
+                    url: `${window.location.origin}/api/v1/admin/enable-admin/${adminId}`,
+                    type: 'PATCH',
+                    success: (data) => {
+                        $('#edit-Enable-success').modal('show')
+                        loadAdminDataTable()
+                    },
+                    error: (err) => {
+                        toastr.error(err.responseJSON.msg)
+                    }
+                })
+            })
+        })
+        let roleId
+        var myGroup = $('.myGroup1');
+        myGroup.on('show.bs.collapse', '.collapse', function () {
+            myGroup.find('.collapse.in').collapse('hide');
+        });
+
+        $('.alert .close').click(function () {
+            $('#error-msg1').addClass('hide');
+        });
+
+        $('#send-modal').on('hidden.bs.modal', function () {
+            phoneInput.setCountry("us")
+            $('.accordion-toggle').addClass('collapsed')
+            $('.collapse').removeClass('in')
+            $('#error-msg1').addClass('hide')
+            $('#btnSubmit').attr('disabled', true);
+            $("#admin-create-form").trigger('reset')
+            $('#admin-create-form').find('#error-msg-role, #error-msg-name,#error-msg-email, #error-msg-phone').text('')
+        })
+
+        $('#send-modal').on('show.bs.modal', function (e) {
+            $('.accordion-toggle').addClass('collapsed')
+            $('#btnSubmit').prop('disabled', true)
+            $('#admin_email, #admin_name, #admin_phone, input:radio').keyup(function () {
+                if ($('#admin_email').val() !== '' && $('#admin_name').val() !== '' && $('#admin_phone').val() !== '' && $("input[type='radio']").is(':checked')) {
+                    $('#btnSubmit').prop('disabled', false);
+                } else {
+                    $('#btnSubmit').prop('disabled', true);
+                }
+            });
+
+
+            $('input[name = "radio1"]').change(function () {
+                roleId = $(this).val()
+            })
+
+        })
+
+        function createAdmin() {
+            let countryCode = '+' + phoneInput.s.dialCode
+            let data = {}
+            let name = $('#admin_name').val().trim()
+            let phone = $('#admin_number').val().replaceAll(/\s/g, '')
+            let email = $('#admin_email').val()
+            let nameRegex = /^[A-Z @~`!@#$%^&*()_=+\\\\';:\"\\/?>.<,-]*$/i
+            let emailRegex = /(?=^(?:[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]\.?){0,63}[A-Za-z0-9_\xC0-\xFF!#$%&'*+\/=?^`{|}~\\-]@[A-Za-z0-9\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?(?:\.[A-Za-z\xC0-\xFF](?:[A-Za-z0-9\xC0-\xFF-]{0,61}[A-Za-z0-9\xC0-\xFF])?)*$)(?=^.{3,254}$)/
+            data.fullName = name
+            data.mobile = phone
+            data.email = email.toLowerCase()
+            data.roleId = roleId
+            data.countryCode = countryCode
+            if (roleId === undefined) {
+                $('#error-msg1').addClass('hide')
+                $('#error-msg-role').text('Please select at least one role.')
+                $('#error-msg-name').text('')
+                $('#error-msg-phone').text('')
+                $('#error-msg-email').text('')
+
+            } else if (name.length < 3) {
+                $('#error-msg1').addClass('hide')
+                $('#error-msg-name').text('Admin name should be longer than 2 characters.')
+                $('#error-msg-role').text('')
+                $('#error-msg-phone').text('')
+                $('#error-msg-email').text('')
+            }
+            else if (!nameRegex.test(name)) {
+                $('#error-msg1').addClass('hide')
+                $('#error-msg-name').text('Only alphabets and special characters are allowed.')
+                $('#error-msg-role').text('')
+                $('#error-msg-phone').text('')
+                $('#error-msg-email').text('')
+            }
+            else if (!phone) {
+                $('#error-msg1').addClass('hide')
+                $('#error-msg-phone').text('Please enter phone number.')
+                $('#error-msg-name').text('')
+                $('#error-msg-role').text('')
+                $('#error-msg-email').text('')
+            }
+            else if (!emailRegex.test(email)) {
+                $('#error-msg1').addClass('hide')
+                $('#error-msg-email').text('Please provide a valid email address.')
+                $('#error-msg-name').text('')
+                $('#error-msg-role').text('')
+                $('#error-msg-phone').text('')
+            }
+
+            else {
+                $.ajax({
+                    url: `/api/v1/admin/createAdmin`,
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $('#send-modal').modal('hide')
+                        $('#modal-admin-success').modal('show')
+                        loadAdminDataTable()
+                    },
+                    error: function (err) {
+                        $('#error-msg-name').text('')
+                        $('#error-msg-role').text('')
+                        $('#error-msg-phone').text('')
+                        $('#error-msg-email').text('')
+                        $('#error-msg1').removeClass('hide')
+                        $('#error-msg').text(err.responseJSON.msg)
+                        $('#send-modal').on('hidden.bs.modal', function () {
+                            $("#admin-create-form").trigger('reset')
+                            $('#error-msg1').addClass('hide')
+                        })
+                    }
+                })
+            }
+        }
+        $('#edit-modal').on('hidden.bs.modal', function () {
+            $('input[name="radio2"]').attr('checked', false)
+            $('#edit-admin-data').trigger('reset')
+            $('.accordion-toggle').addClass('collapsed')
+            $('.collapse').removeClass('in')
+        })
+
+        $('#edit-modal').on('show.bs.modal', function (e) {
+            $("#admin-name, #admin-email, #admin-number, input:radio").keyup(function () {
+                if ($('#admin-name').val() !== '' && $('#admin-email').val() !== '' && $('#admin-number').val() !== '' && $("input[type='radio']").is(':checked')) {
+                    $('#update_admin_details').prop('disabled', false)
+                } else {
+                    $('#update_admin_details').prop('disabled', true)
+                }
+            })
+            $('.accordion-toggle').addClass('collapsed')
+            let btn = $(e.relatedTarget)
+            let edit_admin_id = btn.data('id')
+            let countryCode = btn.data('countrycode')
+            let name = btn.data('name')
+            let email = btn.data('email')
+            let phone = btn.data('phone')
+            let role_id = btn.data('roleid')
+            adminPhoneInput.setNumber(countryCode + phone)
+            $("#admin-name").val(name)
+            $("#admin-email").val(email)
+            $("#country-code").text(countryCode)
+            $("#admin-number").val(phone)
+            $(`#${role_id}`).attr('checked', true)
+            $(`input[name="radio2"]`).change(function () {
+                $('#update_admin_details').prop('disabled', false)
+                role_id = this.id
+            })
+            const radioButtons = document.querySelectorAll('input[name="radio2"]')
+            for (const radioButton of radioButtons) {
+                if (radioButton.checked) {
+                    $('#update_admin_details').prop('disabled', false)
+
+                }
+                if (!radioButton.checked) {
+                    $('#update_admin_details').prop('disabled', true)
+                }
+            }
+            $('#update_admin_details').off().on('click', function () {
+                let data = {}
+                data.countryCode = '+' + adminPhoneInput.s.dialCode
+                data.fullName = $("#admin-name").val().trim()
+                data.mobile = $("#admin-number").val()
+                data.email = $("#admin-email").val()
+                data.roleId = role_id
+
+                $('#update_admin_data').off().on('click', function () {
+                    $.ajax({
+                        url: `/api/v1/admin/update-admin/${edit_admin_id}`,
+                        type: 'PATCH',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: () => {
+                            $('#edit-admin-success').modal('show')
+                            loadAdminDataTable()
+                        },
+                        error: (err) => {
+                            toastr.error(err.responseJSON.msg, "Error")
+                        }
+                    })
+
+                })
+            })
+
+
+
+
+
+        })
+
+    </script>
+    <div class="modal coman-modal fade" id="modal-edit-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content text-center">
+                <h2>Are you sure you want to edit the admin ?</h2>
+                <div class="clearfix logout">
+                    <button type="submit" class="btn   btn-default m-r-sm" data-dismiss="modal">No</button>
+                    <button type="submit" id="update_admin_data" class="btn btn-primary" data-toggle="modal"
+                        data-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal coman-modal  fade" id="edit-admin-success" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel">
+        <div class="modal-dialog  modal-a" role="document">
+            <div class="modal-content text-center">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="success-msg-icon">
+                    <i class="fa fa-check-circle m-b-0" aria-hidden="true"></i>
+                </div>
+                <h2> Admin Edited Successfully !!</h2>
+            </div>
+        </div>
+    </div>
+
+    </body>
+
+    </html>
