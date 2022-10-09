@@ -186,10 +186,15 @@ module.exports = {
             search = search.value != '' ? search.value : false
             let query = []
             query.push(
+                
                 {
                     $match:{
                         companyCode,
                         createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date))}
+                    }
+                },{
+                    $sort:{
+                        createdAt:-1
                     }
                 }
             )
