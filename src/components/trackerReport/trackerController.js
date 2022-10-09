@@ -33,33 +33,33 @@ module.exports = {
             const skip = (page - 1) * limit
             let query = []
             let filter = {}
-            // query.push(
-            //     { $sort: { createdAt: -1 } }, { $skip: skip }, { $limit: limit },
-            //     {
-            //         $group: {
-            //             _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, apiHitCount: { $sum: 1 },
-            //             data: {
-            //                 $push: {
-            //                     _id: '$_id',
-            //                     companyCode: '$companyCode',
-            //                     credentialCode: "$credentialCode",
-            //                     secretKey: "$secretKey",
-            //                     IP: "$IP",
-            //                     referralUrl: "$referralUrl",
-            //                     searchId: "$searchId",
-            //                     origin: "$origin",
-            //                     destination: "$destination",
-            //                     classOfService: "$classOfService",
-            //                     adults: "$adults",
-            //                     child: "$child",
-            //                     infants: "$infants",
-            //                     currency: "$currency",
-            //                     createdAt: "$createdAt",
-            //                     updatedAt: "$updatedAt"
-            //                 }
-            //             }
-            //         }
-            //     },)
+            query.push(
+                { $sort: { createdAt: -1 } }, { $skip: skip }, { $limit: limit },
+                {
+                    $group: {
+                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }, apiHitCount: { $sum: 1 },
+                        data: {
+                            $push: {
+                                _id: '$_id',
+                                companyCode: '$companyCode',
+                                credentialCode: "$credentialCode",
+                                secretKey: "$secretKey",
+                                IP: "$IP",
+                                referralUrl: "$referralUrl",
+                                searchId: "$searchId",
+                                origin: "$origin",
+                                destination: "$destination",
+                                classOfService: "$classOfService",
+                                adults: "$adults",
+                                child: "$child",
+                                infants: "$infants",
+                                currency: "$currency",
+                                createdAt: "$createdAt",
+                                updatedAt: "$updatedAt"
+                            }
+                        }
+                    }
+                },)
             if (search) {
                 query.unshift({
                     $match: {
@@ -67,6 +67,21 @@ module.exports = {
                     }
                 })
             }
+            // query.push(
+            //     {
+            //         $group: {
+            //          _id: {
+            //           $dateToString: {
+            //            date: '$createdAt',
+            //            format: '%Y-%m-%d'
+            //           }
+            //          },
+            //          count: {
+            //           $sum: 1
+            //          }
+            //         }
+            //        }
+            // )
 
             query.push(
                 {
@@ -82,19 +97,7 @@ module.exports = {
                       }
                      ],
                      dateWiseHits: [
-                      {
-                       $group: {
-                        _id: {
-                         $dateToString: {
-                          date: '$createdAt',
-                          format: '%Y-%m-%d'
-                         }
-                        },
-                        count: {
-                         $sum: 1
-                        }
-                       }
-                      }
+                    
                      ]
                     }
                    }
