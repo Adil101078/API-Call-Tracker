@@ -2,19 +2,9 @@ const mongoose = require('mongoose')
 const Model = require('./adminModel')
 const requestHandler = require('../../helpers/requestHandler')
 const logger = require('../../helpers/logger')
-const moment = require('moment')
 const { trackerModel } = require('../trackerReport/trackerModel')
 const bcrypt = require('bcryptjs')
-
-function dateToUtcStartDate(date) {
-    return moment(new Date(date)).utc().startOf('day').toISOString()
-}
-function dateToUtcEndDate(date) {
-    return moment(new Date(date)).utc().endOf('day').toISOString()
-}
-function getUniqueListBy(arr, key) {
-    return [...new Map(arr.map(item => [item[key], item])).values()]
-}
+const { dateToUtcStartDate, dateToUtcEndDate, getUniqueListBy } = require('../../helpers/commonHelpers')
 
 module.exports = {
     initiateLogin: async (req, res) => {
@@ -61,7 +51,7 @@ module.exports = {
         try {
             const userId = req.user._id
             const currentUser = await Model.Admin.findById(userId)
-            const company = await trackerModel.find().lean()
+            const company = await trackerModel.find({},{ companyCode: 1 }).sort({ createdAt: -1}).skip(0).limit(10000)
             const companyCodes = getUniqueListBy(company, 'companyCode')
             return res.render('admin/tracker-reports', { currentUser, pageName: 'Track', companyCodes })
         } catch (err) {
@@ -183,6 +173,7 @@ module.exports = {
             const orderBy = req.query.columns[req.query.order[0].column].data
             const orderByData = {}
             orderByData[orderBy] = req.query.order[0].dir == 'asc' ? 1 : -1
+            orderByData.createdAt = -1
             search = search.value != '' ? search.value : false
             let query = []
             query.push(
@@ -193,9 +184,7 @@ module.exports = {
                         createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date)) }
                     }
                 }, {
-                $sort: {
-                    createdAt: -1
-                }
+                $sort: orderByData
             }
             )
             if (search) {
@@ -254,11 +243,10 @@ module.exports = {
     renderTrackerReportDateWise: async (req, res) => {
         try {
             const userId = req.user._id
-            const { date } = req.query
             const currentUser = await Model.Admin.findById(userId)
-            const company = await trackerModel.find().lean()
-            const companyCodes = getUniqueListBy(company, 'companyCode')
-            return res.render('admin/dateWiseReportListing', { currentUser, pageName: 'Track', companyCodes })
+            // const company = await trackerModel.find().lean()
+            // const companyCodes = getUniqueListBy(company, 'companyCode')
+            return res.render('admin/dateWiseReportListing', { currentUser, pageName: 'Track', companyCodes:['null'] })
         } catch (err) {
             logger.error(err)
             return requestHandler.handleError({ res, err_msg: err.message })
