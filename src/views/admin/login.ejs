@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>API Tracker</title>
 	<base href="/" />
-	<link rel="icon" type="image/ico" href="img/logo-modal.png" />
+	<link rel="icon" type="image/ico" href="img/api.png" />
 	<link href="css/bootstrap.min.css" rel="stylesheet" />
 	<link href="font-awesome/css/font-awesome.css" rel="stylesheet" />
 	<link href="css/animate.css" rel="stylesheet" />
@@ -42,7 +42,7 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content text-center">
 					<h2>API Tracker</h2>
-					<img src="img/logo-modal.png" alt="" />
+					<img src="img/api.png" alt="" />
 					<h1>Sign In</h1>
 					<div id="server_error_msg" class="hide alert alert-danger dismissible" role="alert"></div>
 				
@@ -228,12 +228,12 @@
 				$('#error-msg-email').removeClass('hide')
 			} else {
 				$.ajax({
-					url: 'api/v1/admin/login',
+					url: 'login',
 					type: 'POST',
 					data: JSON.stringify(data),
 					contentType: 'application/json',
 					success: () => {
-						location.href = '/api/v1/admin/tracker-reports'
+						location.href = 'tracker-reports'
 					},
 					error: (err) => {
 						$('#submitForm').attr('disabled', false)
@@ -263,7 +263,7 @@
 				timeLeft = 300
 				$('#success-msg').text('OTP sent successfully!')
 				$.ajax({
-					url: `/api/v1/admin/resend-email-otp`,
+					url: `resend-email-otp`,
 					type: 'PUT',
 					data: JSON.stringify(data),
 					contentType: 'application/json',

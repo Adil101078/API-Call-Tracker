@@ -1,5 +1,3 @@
-// const logger = require('./logger');
-
 module.exports = {
 	handleResponse: ({ res, statusCode = 200, msg = 'Success', data = {}, result = 1 }) => {
 		res.status(statusCode).send({ 

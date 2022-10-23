@@ -11,7 +11,7 @@ module.exports = {
 
 		if (!token) {
 			req.flash('error', 'Please login to continue.')
-			return res.redirect('/api/v1/admin/login')
+			return res.redirect('/login')
 		}
 		try {
 			const decoded = jwt.verify(token, process.env.JWT_SECRETKEY)
@@ -22,7 +22,7 @@ module.exports = {
 		} catch (err) {
 			res.clearCookie('jwt')
 			req.flash('error', 'Session expired. Please login.')
-			return res.redirect('/api/v1/admin/login')
+			return res.redirect('/login')
 		}
 	},
 }
