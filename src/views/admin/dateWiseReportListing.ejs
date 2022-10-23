@@ -1,4 +1,3 @@
-<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 <%- include('../partials/header')%>
     <style>
         .iti__country-list {
@@ -12,40 +11,40 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="ibox">
                         <div class="ibox-content" id="history">
+                            <!-- <select id="select_chartType">
+                                <option>Select Chart Type</option>
+                                <option value="line">Line</option>
+                                <option value="bar">Bar</option>
+                                <option value="pie">Pie</option>
+                            </select> -->
+                            <h2 class="text-black">Chart Data</h2>
+                            <div class="pie"></div>
                             <div class="box-heading">
                                 <h2 id="tracking_report_company" style="text-transform:capitalize ;">Tracking Report - </h2>
                                 <h2 id="tracking_report">Date - </h2>
                             </div>
-                           
-
-
-                                                          
-                                                            <div class="table-responsive coman-table"
-                                                                id="owner-detail-btn">
-                                                                <table class="table dataTables-example"
-                                                                    style="width: 100%;">
-                                                                    <thead>
-                                                                        <tr>
-
-                                                                            <th>Company Code</th>
-                                                                            <th>Credential Code</th>
-                                                                            <th>Referral URL</th>
-                                                                            <th>Search ID</th>
-                                                                            <th>IP</th>
-                                                                            <th>Origin</th>
-                                                                            <th>Destination</th>
-                                                                            <th>Class</th>
-                                                                            <th>Currency</th>
-                                                                            <th>Adults</th>
-                                                                            <th>Child</th>
-                                                                            <th>Infant</th>
-                                                                            <th>Date</th>
-                                                                            
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                </table>
-                                                            </div>
+                            <div class="table-responsive coman-table" id="owner-detail-btn">
+                                <table class="table dataTables-example" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Company Code</th>
+                                            <th>Credential Code</th>
+                                            <th>Referral URL</th>
+                                            <th>Search ID</th>
+                                            <th>IP</th>
+                                            <th>Origin</th>
+                                            <th>Destination</th>
+                                            <th>Class</th>
+                                            <th>Currency</th>
+                                            <th>Adults</th>
+                                            <th>Child</th>
+                                            <th>Infant</th>
+                                            <th>Date</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,27 +180,84 @@
     <script src="js/moment.min.js"></script>
     <script type="text/javascript">
        var getUrlParameter = function getUrlParameter(sParam) {
-        var sPageURL = window.location.search.substring(1),
-            sURLVariables = sPageURL.split('&'),
-            sParameterName,
-            i;
+            var sPageURL = window.location.search.substring(1),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
 
-        for (i = 0; i < sURLVariables.length; i++) {
-            sParameterName = sURLVariables[i].split('=');
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
 
-            if (sParameterName[0] === sParam) {
-                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                }
             }
+            return false;
+        };
+        let date = getUrlParameter('date');
+        let companyCode = getUrlParameter('companyCode');
+
+        $('#tracking_report').append(new Date(date).toDateString())
+        $('#tracking_report_company').append(companyCode)
+        let myData = {}
+        let chartType = 'line'
+        let initiateChart
+        let chartData = []
+        let totalHits = []
+        $('#select_chartType').change(function(){
+            chartType = this.value
+            chart = initiateChart.destroy()
+            for (const prop of Object.getOwnPropertyNames(myData)) {
+                delete myData[prop];
+            }
+            loadChartData()
+        })
+        
+        function loadChartData(){
+            $.ajax({
+                url:`companyCode.chartData?code=${companyCode}&startDate=${date}&endDate=${date}`,
+                type:'GET',
+                success:(data)=>{
+                    data.data.map((x)=>{
+                        chartData.push(x._id)
+                        totalHits.push(x.totalHits)
+                    })
+                    myData.x = 'x'
+                    myData.columns = [];
+                    myData.type = chartType;
+                    chartData.splice(0, 0, 'x');
+                    totalHits.splice(0, 0, 'Hits');
+                    myData.columns.push(totalHits)
+                    myData.columns.push(chartData)
+                    myData.colors = {
+                        Hits: '#f85353',
+                        // Resale: '#f85353',
+                        // Gift: '#d5d731'
+                    }
+                    initiateChart = c3.generate({
+                        bindto: '.pie',
+                        data: myData,
+                        axis: {
+                            x: {
+                                type: 'categorized',
+                            },
+                            y: {
+                                label: 'Hits'
+                                
+                            }
+                        }
+                    })
+                },
+                error: (err)=>{
+                    toastr.error(err.responseJSON.msg, 'Error')
+                }
+            })
         }
-    return false;
-};
-let date = getUrlParameter('date');
-let companyCode = getUrlParameter('companyCode');
-
-$('#tracking_report').append(new Date(date).toDateString())
-$('#tracking_report_company').append(companyCode)
-
+        
+       
+        
         $(document).ready(function () {
+            loadChartData()
             loadAdminDataTable()
 
             $(document).on('click', '.dropdown-menu li', function (e) {
@@ -219,7 +275,7 @@ $('#tracking_report_company').append(companyCode)
                 preventDuplicates: true,
                 progressBar: true,
             }
-           
+
         })
         function getUrl(date) {
             let url = `/api/v1/admin/tracker-report.byDate/?${date}`
@@ -252,7 +308,7 @@ $('#tracking_report_company').append(companyCode)
                 }
             }
 
-          
+
             $('#select_company_code').on('change', function () {
                 search = this.value
             });
@@ -268,49 +324,38 @@ $('#tracking_report_company').append(companyCode)
                 "processing": true,
                 "filter": true,
                 "orderMulti": false,
-                // stateSave: true,
                 'serverSide': true,
                 "ajax": {
-                    "url": `api/v1/admin/tracker-report.byDate?companyCode=${companyCode}&date=${date}`,
+                    "url": `tracker-report.byDate?companyCode=${companyCode}&date=${date}`,
                     "type": "GET",
                     "datatype": "json",
-                    // "dataSrc": ""
                 },
                 "columns": [
-                    { render(data, type, row, meta){
-                        let text = `<div style="text-transform: capitalize;">${row.companyCode}</div>`
-                        return text
-                    }},
-                    { data: 'credentialCode'},
-                    { data: 'referralUrl'},
-                    { data: 'searchId'},
-                    { data:'IP'},
-                    { data: 'origin'},
-                    { data:'destination'},
-                    { data: 'classOfService'},
-                    { data: 'currency'},
-                    { data: 'adults'},
-                    { data: 'child'},
-                    { data: 'infants'},
+                    {
+                        render(data, type, row, meta) {
+                            let text = `<div style="text-transform: capitalize;">${row.companyCode}</div>`
+                            return text
+                        }
+                    },
+                    { data: 'credentialCode' },
+                    { data: 'referralUrl' },
+                    { data: 'searchId' },
+                    { data: 'IP' },
+                    { data: 'origin' },
+                    { data: 'destination' },
+                    { data: 'classOfService' },
+                    { data: 'currency' },
+                    { data: 'adults' },
+                    { data: 'child' },
+                    { data: 'infants' },
                     {
                         mRender(data, type, row, meta) {
-                            let text
-                            const dt = new Date(row.createdAt)
-                            const month = dt.getMonth() + 1;
-                            let mm = month > 10 ? month : `0${month}`
-                            let dd = dt.getDate() + 1 > 10 ? dt.getDate() : `0${dt.getDate()}`
-                            let hrs = (dt.getHours() < 10 ? '0' : '') + dt.getHours()
-                            let min = (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
-                            let sec = (dt.getSeconds() < 10 ? '0' : '') + dt.getSeconds();
-                            return dd + '/' + mm + '/' + dt.getFullYear() + ' ' + hrs + ':' + min + ':' + sec
-
+                            return moment(row.createdAt).format('DD/MM/YYYY HH:mm:ss')
                         },
-
-
                     },
-                   
-                   
-                   
+
+
+
                 ]
             })
 
@@ -385,7 +430,7 @@ $('#tracking_report_company').append(companyCode)
 
         }
 
-        
+
         function resetFilter() {
             $('#startDate').attr('disabled', false)
             $('#endDate').attr('disabled', false)
@@ -401,7 +446,7 @@ $('#tracking_report_company').append(companyCode)
             $('.dropdown-filter').removeClass('open')
 
         }
-       
+
         $('#modal-delete').on('show.bs.modal', function (e) {
             let adminId = $(e.relatedTarget).data('id')
             let roleName = $(e.relatedTarget).data('role')

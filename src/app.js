@@ -9,6 +9,7 @@ const adminController  = require('./components/admin/adminController')
 const flash = require('connect-flash')
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
+const adminRouter = require('./components/admin/adminRoute')
 
 //create super-admin
 // (async ()=> await adminController.createSuperAdmin())()
@@ -41,5 +42,6 @@ app.use(
 )
 app.use(flash())
 app.use('/api/v1', indexRouter)
+app.use('/', adminRouter)
 
 module.exports = app

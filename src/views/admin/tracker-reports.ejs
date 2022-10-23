@@ -298,9 +298,9 @@
     <script src="js/moment.min.js"></script>
     <script type="text/javascript">
        
-        setInterval(function() {
-            loadAdminDataTable()
-        }, 5000);
+        // setInterval(function() {
+        //     loadAdminDataTable()
+        // }, 5000);
         $(document).ready(function () {
             loadAdminDataTable()
 
@@ -322,7 +322,7 @@
            
         })
         function getUrl(companyCode, startDate, endDate) {
-            let url = `/api/v1/admin/tracker-reports.listing?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
+            let url = `tracker-reports.listing?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
             return url
         }
 
@@ -399,7 +399,7 @@
                     { 
                         render(data, type, row, meta){
                             let text = `<div class='action-btn'>
-                                            <a href="api/v1/admin/tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
+                                            <a href="tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
                                            `
                          return text
 }

@@ -10,7 +10,7 @@
 			<li class="user-info-box welcome tooltipa">
 				<div class="dropdown d-flex">
 					<span class="prof-img">
-						<a data-toggle="tooltip" title="Profile" data-placement="bottom" href="api/v1/admin/profile/me">
+						<a data-toggle="tooltip" title="Profile" data-placement="bottom" href="profile/me">
 							<%if(currentUser.profilePicture === undefined){%>
 							<img alt="image" class="img-back" src="img/prf-img.png" /></a>
 							<%}else{%>
@@ -26,7 +26,7 @@
 						</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="api/v1/admin/profile/me">Profile</a></li>
+						<li><a href="profile/me">Profile</a></li>
 
 						<li>
 							<a data-toggle="modal" data-dismiss="modal" data-target="#modal-logout">Logout</a>
@@ -96,12 +96,12 @@
 <script type="text/javascript">
 	function logout(){
 		$.ajax({
-			url:`/api/v1/admin/logout`,
+			url:`logout`,
 			type:'PATCH',
 			contentType:'application/json',
 			success: ()=>{
 				window.setTimeout(()=>{
-					window.location.href = 'api/v1/admin/login'
+					window.location.href = 'login'
 				}, 500)
 			},
 			error: (err)=>{
