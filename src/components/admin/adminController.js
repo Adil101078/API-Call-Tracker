@@ -32,8 +32,6 @@ module.exports = {
     },
     renderLogin: async (req, res) => {
         logger.info('Inside renderLogin Controller')
-
-        console.log(req.cookies)
         if (req.cookies.jwt !== undefined) {
             return res.redirect('/tracker-reports')
         } else {
@@ -45,7 +43,7 @@ module.exports = {
 
         const userId = req.user._id
         const currentUser = await Model.Admin.findById(userId)
-        const company = await trackerModel.find({}, { companyCode: 1 }).sort({ createdAt: -1 }).skip(0).limit(10000)
+        const company = await trackerModel.find({}, { companyCode: 1 }).sort({ createdAt: -1 }).skip(0).limit(7031).lean()
         const companyCodes = getUniqueListBy(company, 'companyCode')
         return res.render('admin/tracker-reports', { currentUser, pageName: 'Track', companyCodes })
 
@@ -194,6 +192,9 @@ module.exports = {
                         {
                             destination: { $regex: search, $options: 'i' },
                         },
+                        {
+                            IP: { $regex: search, $options: 'i' },
+                        },
                     ],
                 },
             })
@@ -270,6 +271,34 @@ module.exports = {
             {
                 $group: {
                     _id: '$destination',
+                    totalHits: {
+                        $count: {}
+                    }
+                }
+            },
+            {
+                $sort: {
+                    totalHits: -1
+                }
+            },
+            {
+                $limit: 25
+            }
+        ])
+        return requestHandler.handleResponse({ res, data })
+    },
+    chartDataIPAddress: async(req, res)=>{
+        const { startDate, endDate, code } = req.query
+        const data = await trackerModel.aggregate([
+            {
+                $match: {
+                    companyCode: code,
+                    createdAt: { $gte: new Date(dateToUtcStartDate(startDate)), $lte: new Date(dateToUtcEndDate(endDate))}
+                }
+            },
+            {
+                $group: {
+                    _id: '$IP',
                     totalHits: {
                         $count: {}
                     }

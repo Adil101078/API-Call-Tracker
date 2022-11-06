@@ -147,17 +147,7 @@
 
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-4 ">
-                                                                    <div class="text-right">
-                                                                        <div
-                                                                            class="text-right  d-flex-right">
-                                                                            <button type="submit"
-                                                                                class="btn btn-primary m-l-sm"
-                                                                                data-toggle="modal"
-                                                                                data-target="#send-modal">Generate Report</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                               
                                                             </div>
                                                             <div class="table-responsive coman-table"
                                                                 id="owner-detail-btn">
@@ -171,12 +161,6 @@
                                                                             <th>Hits</th>
                                                                             <th>Average Hits/sec</th>
                                                                             <th>View</th>
-                                                                            <!-- <th>IP</th>
-                                                                            <th>Origin</th>
-                                                                            <th>Destination</th>
-                                                                            <th>Class</th>
-                                                                            <th>Currency</th>
-                                                                            <th>Date</th> -->
                                                                         </tr>
                                                                     </thead>
 
@@ -297,13 +281,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="js/moment.min.js"></script>
     <script type="text/javascript">
-       
-        setInterval(function() {
-            loadAdminDataTable()
-        }, 6000);
         $(document).ready(function () {
             loadAdminDataTable()
-
             $(document).on('click', '.dropdown-menu li', function (e) {
                 e.stopPropagation();
             }); $(document).on('click', '.dropdown-menu li  option', function (e) {
@@ -368,7 +347,6 @@
                 "processing": true,
                 "filter": true,
                 "orderMulti": false,
-                // stateSave: true,
                 'serverSide': true,
                 'aaSorting': [[1, 'desc']],
                 "ajax": {
@@ -376,6 +354,21 @@
                     "type": "GET",
                     "datatype": "json",
                 },
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [ 10, 25, 50, -1 ],
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],
+                buttons: [
+                'pageLength',
+                    {
+                        text: 'Refresh',
+                        action: function ( e, dt, node, config ) {
+                            dt.ajax.reload();
+                        }
+                    },
+                    'csv', 'excel', 'pdf'
+                ],
                 "columns": [
                     { render(data, type, row, meta){
                         let text = `<div style="text-transform: capitalize;">${row._id.companyCode}</div>`
@@ -402,32 +395,9 @@
                                             <a href="tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
                                            `
                          return text
-}
-}
-                    // {
-                    //     data:'IP'
-                    // },
-                    // { data: 'origin'
-                    // },
-                    // { data:'destination'
-                    // },
-                    // {
-                    //     data: 'classOfService'
-                    // },
-                    // {
-                    //     data: 'currency'
-                    // },
-                    // {
-                    //     mRender(data, type, row, meta) {
-                    //         const dt = new Date(row.createdAt)
-                    //         const month = dt.getMonth() + 1;
-                    //         let mm = month > 10 ? month : `0${month}`
-                    //         let dd = dt.getDate() + 1 > 10 ? dt.getDate() : `0${dt.getDate()}`
-                    //         return dd + '/' + mm + '/' + dt.getFullYear();
-
-                    //     },
-                    // },
-                   
+                        }
+                    }
+    
                    
                 ]
             })

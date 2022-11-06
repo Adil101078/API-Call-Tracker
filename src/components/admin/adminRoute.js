@@ -13,5 +13,6 @@ router.get('/tracker-reports.listing', isAdmin, Wrap(controller.trackerReportLis
 router.get('/tracker-report.byDate', isAdmin, Wrap(controller.trackerReportDateWiseListing))
 router.get('/tracker-reports.byDate', isAdmin, Wrap(controller.renderTrackerReportDateWise))
 router.get('/companyCode.chartData', Wrap(controller.chartData))
+router.get('/companyCode.chartDataIP', Wrap(controller.chartDataIPAddress))
 
 module.exports = router
