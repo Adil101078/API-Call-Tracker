@@ -10,6 +10,8 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const adminRouter = require('./components/admin/adminRoute')
+const cron = require('node-cron')
+const {ClearDB} = require('./helpers/db.helper')
 
 //create super-admin
 // (async ()=> await adminController.createSuperAdmin())()
@@ -43,5 +45,9 @@ app.use(
 app.use(flash())
 app.use('/api/v1', indexRouter)
 app.use('/', adminRouter)
+
+cron.schedule('0 0 17 * *', async()=>{
+	await ClearDB()
+})
 
 module.exports = app
