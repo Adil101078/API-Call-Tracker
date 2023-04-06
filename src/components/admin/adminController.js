@@ -5,6 +5,7 @@ const logger = require('../../helpers/logger')
 const { trackerModel } = require('../trackerReport/trackerModel')
 const bcrypt = require('bcryptjs')
 const { dateToUtcStartDate, dateToUtcEndDate, getUniqueListBy } = require('../../helpers/commonHelpers')
+const moment = require('moment')
 
 module.exports = {
     initiateLogin: async (req, res) => {
@@ -49,7 +50,7 @@ module.exports = {
 
     },
     trackerReportListing: async (req, res) => {
-
+        
         let { startDate, endDate, search, start, length, companyCode } = req.query
         const orderBy = req.query.columns[req.query.order[0].column].data
         const orderByData = {}

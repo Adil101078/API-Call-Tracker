@@ -1,0 +1,24 @@
+<div class="table-responsive coman-table" id="owner-detail-btn">
+    <table class="table dataTables-example" style="width: 100%;">
+        <thead>
+            <tr>
+
+                <th>Company Code</th>
+                <th>Date</th>
+                <th>Hits</th>
+                <th>Average Hits/sec</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for(const e of users){%>
+            <tr>
+                <th>{e.comapnyCode}</th>
+                <th>{e.date}</th>
+                <th>{e.hits}</th>
+                <th>{e.avgHits}</th>
+            </tr>
+            <%}%>
+        </tbody>
+
+    </table>
+</div>

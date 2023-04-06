@@ -382,9 +382,15 @@
                     }},
                     { render(data, type, row, meta){
                         let text 
-                        let now = new Date(),
-                        then = new Date( now.getFullYear(),now.getMonth(),now.getDate(),0,0,0),diff = (now.getTime() - then.getTime())/1000
-                        text = row.count/Math.floor(diff)
+                        let now = new Date()
+                        const t1 = new Date(moment(row._id.date, 'YYYY-MM-DD').startOf('day'))
+                        let t2 = new Date(moment(row._id.date, 'YYYY-MM-DD').endOf('day'));
+                        if(now.getFullYear()===t2.getFullYear() && now.getDate() === t2.getDate()&& now.getMonth()===t2.getMonth()){
+                            t2 = new Date()
+                        } 
+                        
+                        const dif = Math.abs(new Date(t1).getTime() - new Date(t2).getTime()) / 1000
+                        text = row.count/Math.floor(dif)
                         return text.toFixed(3)
 
                     }},
