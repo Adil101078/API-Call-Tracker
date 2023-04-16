@@ -11,6 +11,7 @@ const MemoryStore = require('memorystore')(session)
 const adminRouter = require('./components/admin/adminRoute')
 const cron = require('node-cron')
 const {ClearDB} = require('./helpers/db.helper')
+const { GeneratePDF } = require('./helpers/pdf-creator.helper')
 
 app.use(function (req, res, next) {
 	res.setHeader(
@@ -43,6 +44,9 @@ app.use('/api/v1', indexRouter)
 app.use('/', adminRouter)
 
 cron.schedule('0 0 * * 0', async()=>{
+	await GeneratePDF()
+})
+cron.schedule('00 03 */15 * *', async()=>{
 	await ClearDB()
 })
 
