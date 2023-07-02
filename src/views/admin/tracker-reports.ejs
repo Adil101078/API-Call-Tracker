@@ -1,4 +1,6 @@
 <%- include('../partials/header')%>
+<input type="text" style="display:none">
+<input type="password" style="display:none">
     <div id="wrapper">
         <div style="padding: 7px 10px 0px" class="wrapper wrapper-content">
             <div class="row">
@@ -69,7 +71,7 @@
                                                                                     </option>
                                                                                     <% companyCodes.forEach(function(e){%>
                                                                                             <option
-                                                                                                value="<%=e.companyCode%>"><%=e.companyCode%>
+                                                                                                value="<%=e._id%>"><%=e._id%>
                                                                                               
                                                                                             </option>
                                                                                             <%})%>
@@ -298,6 +300,7 @@
                 preventDuplicates: true,
                 progressBar: true,
             }
+            $('input[type="search"]').attr('autocomplete', 'off')
            
         })
         function getUrl(companyCode, startDate, endDate) {
@@ -349,6 +352,9 @@
                 "orderMulti": false,
                 'serverSide': true,
                 'aaSorting': [[1, 'desc']],
+                initComplete: function() {
+                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete','off').css('overflow','hidden').css('margin','auto');
+                } ,
                 "ajax": {
                     "url": generateUrl,
                     "type": "GET",

@@ -44,8 +44,13 @@ module.exports = {
 
         const userId = req.user._id
         const currentUser = await Model.Admin.findById(userId)
-        const company = await trackerModel.find({}, { companyCode: 1 }).sort({ createdAt: -1 }).skip(0).limit(7031).lean()
-        const companyCodes = getUniqueListBy(company, 'companyCode')
+        const companyCodes = await trackerModel.aggregate([
+            {
+                $group:{
+                    _id: '$companyCode'
+                }
+            }
+        ])
         return res.render('admin/tracker-reports', { currentUser, pageName: 'Track', companyCodes })
 
     },
