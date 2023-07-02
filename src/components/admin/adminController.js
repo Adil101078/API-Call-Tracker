@@ -165,7 +165,6 @@ module.exports = {
         const orderBy = req.query.columns[req.query.order[0].column].data
         const orderByData = {}
         orderByData[orderBy] = req.query.order[0].dir == 'asc' ? 1 : -1
-        orderByData.createdAt = -1
         search = search.value != '' ? search.value : false
         let query = []
         query.push(
@@ -175,9 +174,7 @@ module.exports = {
                     companyCode,
                     createdAt: { $gte: new Date(dateToUtcStartDate(date)), $lte: new Date(dateToUtcEndDate(date)) }
                 }
-            }, {
-            $sort: orderByData
-        }
+            },
         )
         if (search) {
             query.push({
@@ -209,6 +206,9 @@ module.exports = {
             $facet: {
                 list: [
                     {
+                        $sort: orderByData
+                    },
+                    {
                         $skip: Number(start) || 0,
                     },
                     {
@@ -222,7 +222,7 @@ module.exports = {
                 ],
             },
         })
-        let response = await trackerModel.aggregate(query)
+        let response = await trackerModel.aggregate(query, { allowDiskUse: true })
         let responseData = {
             draw: req.query.draw,
             recordsTotal: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
