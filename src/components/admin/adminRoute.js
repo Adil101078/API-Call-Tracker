@@ -14,5 +14,6 @@ router.get('/tracker-report.byDate', isAdmin, Wrap(controller.trackerReportDateW
 router.get('/tracker-reports.byDate', isAdmin, Wrap(controller.renderTrackerReportDateWise))
 router.get('/companyCode.chartData', Wrap(controller.chartData))
 router.get('/companyCode.chartDataIP', Wrap(controller.chartDataIPAddress))
+router.get('/past-reports', Wrap(controller.pastReport))
 
 module.exports = router

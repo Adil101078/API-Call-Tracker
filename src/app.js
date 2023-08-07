@@ -10,8 +10,8 @@ const session = require('express-session')
 const MemoryStore = require('memorystore')(session)
 const adminRouter = require('./components/admin/adminRoute')
 const cron = require('node-cron')
-const {ClearDB} = require('./helpers/db.helper')
 const { GeneratePDF } = require('./helpers/pdf-creator.helper')
+const {monitorAndCleanup} = require('./helpers/db.helper')
 
 app.use(function (req, res, next) {
 	res.setHeader(
@@ -43,13 +43,8 @@ app.use(flash())
 app.use('/api/v1', indexRouter)
 app.use('/', adminRouter)
 
-cron.schedule('0 0 * * 0', async()=>{
-	await GeneratePDF()
-})
-cron.schedule('00 03 */15 * *', async()=>{
-	await ClearDB()
-})
-
-
+cron.schedule('0 0 * * *', async () => { // Run the script daily at midnight
+	await monitorAndCleanup()
+});
 
 module.exports = app

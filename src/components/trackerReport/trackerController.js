@@ -9,8 +9,7 @@ module.exports = {
        
             if (!req.body.companyCode)
                 return requestHandler.handleError({ res, err_msg: 'Company code is required.' })
-            const newReport = new Model.trackerModel({ ...req.body })
-            const data = await newReport.save()
+            const data = await Model.trackerModel.create({...req.body })
             return requestHandler.handleResponse({ res, data, statusCode: 201, msg: 'Report created successfully.' })
         
     },

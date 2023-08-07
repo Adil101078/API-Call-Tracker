@@ -1,15 +1,19 @@
 <%- include('../partials/header')%>
-<input type="text" style="display:none">
-<input type="password" style="display:none">
+    <input type="text" style="display:none">
+    <input type="password" style="display:none">
     <div id="wrapper">
         <div style="padding: 7px 10px 0px" class="wrapper wrapper-content">
             <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div class="ibox">            
-            <div class="ibox-content" id="history">
-                <%- include('../partials/navbar')%>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="ibox">
+                        <div class="ibox-content" id="history">
+                            <%- include('../partials/navbar')%>
 
-            </div></div></div></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -18,252 +22,157 @@
                             <div class="box-heading">
                                 <h2>API Call Tracker</h2>
                             </div>
-                           
 
-
-                                                            <div class="row m-b-sm ">
-                                                                <div class="col-md-8 ">
-                                                                    <div class="bootstrap-tagsinput"
-                                                                        id="myDropdown">
-                                                                        <div
-                                                                            class="btn-group dropdown-filter">
-                                                                            <button type="button"
-                                                                                class="btn  dropdown-toggle m-r-sm"
-                                                                                data-toggle="dropdown"
-                                                                                aria-haspopup="true"
-                                                                                aria-expanded="false">
-                                                                                <i class="fa fa-filter"
-                                                                                    aria-hidden="true"></i>
-                                                                                Filter by
-                                                                                <span class="caret"></span>
-                                                                            </button>
-                                                                            <ul class="dropdown-menu">
-                                                                                <li
-                                                                                    class="dropdown-actions d-flex-between">
-                                                                                    <div>
-                                                                                        <button
-                                                                                            onclick="filterApi()"
-                                                                                            type="button"
-                                                                                            class="btn btn-success btn-xs">Apply</button>
-                                                                                        <button
-                                                                                            onclick="resetFilter()"
-                                                                                            id="reset-filter-data"
-                                                                                            type="button"
-                                                                                            class="btn btn-default btn-xs">Reset</button>
-                                                                                    </div>
-                                                                                    <a
-                                                                                        onclick="closeFilter()">
-                                                                                        <i class="fa fa-times"
-                                                                                            aria-hidden="true"
-                                                                                            style="color: #000;"></i></a>
-                                                                                </li>
-                                                                                <li role="separator"
-                                                                                    class="divider"></li>
-
-
-                                                                               
-                                                                                <li>
-                                                                                    <label>Company Code</label>
-                                                                                    <select id="select_company_code"
-                                                                                    class="form-control ">
-                                                                                    <option value="">
-                                                                                        Select
-                                                                                    </option>
-                                                                                    <% companyCodes.forEach(function(e){%>
-                                                                                            <option
-                                                                                                value="<%=e._id%>"><%=e._id%>
-                                                                                              
-                                                                                            </option>
-                                                                                            <%})%>
-                                                                                            
-                                                                                        </select>
-                                                                                </li>
-                                                                               
-                                                                                <li role="separator"
-                                                                                    class="divider"></li>
-                                                                                <li class="" id="data_5">
-                                                                                    <div class="row">
-                                                                                        <div
-                                                                                            class="col-lg-6">
-                                                                                            <label>From</label>
-                                                                                            <div class="input-daterange input-group"
-                                                                                                id="datepicker">
-                                                                                                <span
-                                                                                                    class="input-group-addon"><i
-                                                                                                        class="fa fa-calendar"></i></span>
-                                                                                                <input
-                                                                                                    id="startDate"
-                                                                                                    type="text"
-                                                                                                    class="input-sm form-control"
-                                                                                                    name="start"
-                                                                                                    placeholder="Please select a date"
-                                                                                                    autocomplete="off">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div
-                                                                                            class="col-lg-6">
-                                                                                            <label>To</label>
-                                                                                            <div class="input-daterange input-group"
-                                                                                                id="datepicker">
-                                                                                                <span
-                                                                                                    class="input-group-addon"><i
-                                                                                                        class="fa fa-calendar"></i></span>
-                                                                                                <input
-                                                                                                    id="endDate"
-                                                                                                    type="text"
-                                                                                                    class="input-sm form-control"
-                                                                                                    name="start"
-                                                                                                    placeholder="Please select a date"
-                                                                                                    autocomplete="off">
-                                                                                            </div>
-                                                                                        </div>
-                                                                                </li>
-
-                                                                            </ul>
-                                                                        </div>
-
-                                                                        <span id="filter-name-role"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetRoleFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-                                                                        <span id="filter-name-status"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetStatusFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-                                                                        <span id="filter-lastMonth"
-                                                                            class="tag label label-primary hide">
-
-                                                                            <a onclick="resetDateFilter()"
-                                                                                style="color: #fff;"><i
-                                                                                    class="fa fa-times"
-                                                                                    aria-hidden="true"></i></a>
-                                                                        </span>
-
-                                                                    </div>
+                            <div class="tabs-container "
+                            id="create_mngmnt_req_ownbrd">
+                            <ul class="nav nav-tabs mb-10">
+                                <li class="active"><a data-toggle="tab"
+                                        href="#PendingNFTs"> Current Reports</a></li>
+                                <li class=""><a data-toggle="tab"
+                                        href="#CreatorOwnboarded">Archived Reports</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+                            <div id="PendingNFTs" class="tab-pane fade in active">
+                                <div class="row m-b-sm ">
+                                    <div class="col-md-8 ">
+                                        <div class="bootstrap-tagsinput" id="myDropdown">
+                                            <div class="btn-group dropdown-filter">
+                                                <button type="button" class="btn  dropdown-toggle m-r-sm"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                                    Filter by
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li class="dropdown-actions d-flex-between">
+                                                        <div>
+                                                            <button onclick="filterApi()" type="button"
+                                                                class="btn btn-success btn-xs">Apply</button>
+                                                            <button onclick="resetFilter()" id="reset-filter-data"
+                                                                type="button" class="btn btn-default btn-xs">Reset</button>
+                                                        </div>
+                                                        <a onclick="closeFilter()">
+                                                            <i class="fa fa-times" aria-hidden="true"
+                                                                style="color: #000;"></i></a>
+                                                    </li>
+                                                    <li role="separator" class="divider"></li>
+    
+    
+    
+                                                    <li>
+                                                        <label>Company Code</label>
+                                                        <select id="select_company_code" class="form-control ">
+                                                            <option value="">
+                                                                Select
+                                                            </option>
+                                                            <% companyCodes.forEach(function(e){%>
+                                                                <option value="<%=e._id%>">
+                                                                    <%=e._id%>
+    
+                                                                </option>
+                                                                <%})%>
+    
+                                                        </select>
+                                                    </li>
+    
+                                                    <li role="separator" class="divider"></li>
+                                                    <li class="" id="data_5">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label>From</label>
+                                                                <div class="input-daterange input-group" id="datepicker">
+                                                                    <span class="input-group-addon"><i
+                                                                            class="fa fa-calendar"></i></span>
+                                                                    <input id="startDate" type="text"
+                                                                        class="input-sm form-control" name="start"
+                                                                        placeholder="Please select a date"
+                                                                        autocomplete="off">
                                                                 </div>
-                                                               
                                                             </div>
-                                                            <div class="table-responsive coman-table"
-                                                                id="owner-detail-btn">
-                                                                <table class="table dataTables-example"
-                                                                    style="width: 100%;">
-                                                                    <thead>
-                                                                        <tr>
-
-                                                                            <th>Company Code</th>
-                                                                            <th>Date</th>
-                                                                            <th>Hits</th>
-                                                                            <th>Average Hits/sec</th>
-                                                                            <th>View</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                </table>
+                                                            <div class="col-lg-6">
+                                                                <label>To</label>
+                                                                <div class="input-daterange input-group" id="datepicker">
+                                                                    <span class="input-group-addon"><i
+                                                                            class="fa fa-calendar"></i></span>
+                                                                    <input id="endDate" type="text"
+                                                                        class="input-sm form-control" name="start"
+                                                                        placeholder="Please select a date"
+                                                                        autocomplete="off">
+                                                                </div>
                                                             </div>
+                                                    </li>
+    
+                                                </ul>
+                                            </div>
+    
+                                            <span id="filter-name-role" class="tag label label-primary hide">
+    
+                                                <a onclick="resetRoleFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+                                            <span id="filter-name-status" class="tag label label-primary hide">
+    
+                                                <a onclick="resetStatusFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+                                            <span id="filter-lastMonth" class="tag label label-primary hide">
+    
+                                                <a onclick="resetDateFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+    
+                                        </div>
+                                    </div>
+    
+                                </div>
+                                <div class="table-responsive coman-table" id="owner-detail-btn">
+                                    <table class="table dataTables-example" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+    
+                                                <th>Company Code</th>
+                                                <th>Date</th>
+                                                <th>Hits</th>
+                                                <th>Average Hits/sec</th>
+                                                <th>View</th>
+                                            </tr>
+                                        </thead>
+    
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="CreatorOwnboarded" class="tab-pane">
+                                <div class="row m-b-sm ">
+                                    
+    
+                                </div>
+                                <div class="table-responsive coman-table" id="owner-detail">
+                                    <table class="table dataTables-example1" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+    
+                                                <th>Company Code</th>
+                                                <th>Date</th>
+                                                <th>Hits</th>
+                                                <th>Average Hits/sec</th>
+                                            </tr>
+                                        </thead>
+    
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal coman-modal " id="send-modal">
-        <div class="modal-dialog">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div class="" style="border: none;">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
 
-                </div>
-                <h2 class="text-center">Generate Report</h2>
-                <!-- Modal body -->
-
-                <form id="admin-create-form">
-
-                    <div id="error-msg1" class=" hide alert alert-danger alert-dismissible" role="alert">
-                        <button type="button" class="close" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                        <p style="font-size: 14px;
-    color: rgb(189, 32, 32);" id="error-msg"></p>
-                    </div>
-
-                    
-                        <label>Company Code</label>
-                        <select id="select_company_code"
-                        class="form-control ">
-                        <option value="">
-                            Select
-                        </option>
-                        <% companyCodes.forEach(function(e){%>
-                                <option
-                                    value="<%=e.companyCode%>"><%=e.companyCode%>
-                                  
-                                </option>
-                                <%})%>
-                                
-                            </select>
-                    
-                   
-                        <div class="row">
-                            <div
-                                class="col-lg-6">
-                                <label>From</label>
-                                <div class="input-daterange input-group"
-                                    id="datepicker">
-                                    <span
-                                        class="input-group-addon"><i
-                                            class="fa fa-calendar"></i></span>
-                                    <input
-                                        id="startDate1"
-                                        type="text"
-                                        class="input-sm form-control"
-                                        name="start"
-                                        placeholder="Please select a date"
-                                        autocomplete="off">
-                                </div>
-                            </div>
-                            <div
-                                class="col-lg-6">
-                                <label>To</label>
-                                <div class="input-daterange input-group"
-                                    id="datepicker">
-                                    <span
-                                        class="input-group-addon"><i
-                                            class="fa fa-calendar"></i></span>
-                                    <input
-                                        id="endDate1"
-                                        type="text"
-                                        class="input-sm form-control"
-                                        name="start"
-                                        placeholder="Please select a date"
-                                        autocomplete="off">
-                                </div>
-                            </div>
-                  
-                    
-                    
-                    <center>
-                        <button id="btnSubmit" type="button" class="btn btn-primary " data-toggle="modal"
-                            disabled="'disabled" onclick="">Submit</button>
-                    </center>
-
-                </form>
-
-            </div>
-        </div>
-    </div>
-
-    
     <!-- Mainly scripts -->
     <script src="js/jquery-2.1.1.js"></script>
     <script src="js/inspinia.js"></script>
@@ -301,7 +210,7 @@
                 progressBar: true,
             }
             $('input[type="search"]').attr('autocomplete', 'off')
-           
+
         })
         function getUrl(companyCode, startDate, endDate) {
             let url = `tracker-reports.listing?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
@@ -334,7 +243,7 @@
                 }
             }
 
-          
+
             $('#select_company_code').on('change', function () {
                 search = this.value
             });
@@ -344,6 +253,57 @@
             let generateUrl = getUrl(search, startDate, endDate)
             // Initiate datatable
 
+            $('.dataTables-example1').DataTable({
+                destroy: true,
+                "search": false,
+                "processing": true,
+                "filter": false,
+                "orderMulti": false,
+                'serverSide': true,
+                'aaSorting': [[1, 'desc']],
+                initComplete: function () {
+                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
+                },
+                "ajax": {
+                    "url": 'past-reports',
+                    "type": "GET",
+                    "datatype": "json",
+                },
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [10, 25, 50, 1400000],
+                    ['10 rows', '25 rows', '50 rows', 'Show all']
+                ],
+                buttons: [
+                    'pageLength',
+                    {
+                        text: 'Refresh',
+                        action: function (e, dt, node, config) {
+                            dt.ajax.reload();
+                        }
+                    },
+                    'csv', 'excel', 'pdf'
+                ],
+                "columns": [
+                    {
+                        data: 'Company_Code', orderable:false
+                            
+                    },
+                    {
+                        data: 'Date', orderable:false
+                    },
+                    {
+                        data: 'Hits', orderable:false
+                    },
+                    {
+                        data:'Hits/sec', orderable:false, render:(data)=> data?.toFixed(3)
+                    },
+
+    
+
+
+                ]
+            })
             $('.dataTables-example').DataTable({
                 destroy: true,
                 "search": true,
@@ -352,9 +312,9 @@
                 "orderMulti": false,
                 'serverSide': true,
                 'aaSorting': [[1, 'desc']],
-                initComplete: function() {
-                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete','off').css('overflow','hidden').css('margin','auto');
-                } ,
+                initComplete: function () {
+                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
+                },
                 "ajax": {
                     "url": generateUrl,
                     "type": "GET",
@@ -362,55 +322,63 @@
                 },
                 dom: 'Bfrtip',
                 lengthMenu: [
-                    [ 10, 25, 50, -1 ],
-                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                    [10, 25, 50, 1400000],
+                    ['10 rows', '25 rows', '50 rows', 'Show all']
                 ],
                 buttons: [
-                'pageLength',
+                    'pageLength',
                     {
                         text: 'Refresh',
-                        action: function ( e, dt, node, config ) {
+                        action: function (e, dt, node, config) {
                             dt.ajax.reload();
                         }
                     },
                     'csv', 'excel', 'pdf'
                 ],
                 "columns": [
-                    { render(data, type, row, meta){
-                        let text = `<div style="text-transform: capitalize;">${row._id.companyCode}</div>`
-                        return text
-                    }},
-                    { render(data, type, row, meta){
-                        return row._id.date
-                    }},
-                    { render(data, type, row, meta){
-                        return row.count
-                    }},
-                    { render(data, type, row, meta){
-                        let text 
-                        let now = new Date()
-                        const t1 = new Date(moment(row._id.date, 'YYYY-MM-DD').startOf('day'))
-                        let t2 = new Date(moment(row._id.date, 'YYYY-MM-DD').endOf('day'));
-                        if(now.getFullYear()===t2.getFullYear() && now.getDate() === t2.getDate()&& now.getMonth()===t2.getMonth()){
-                            t2 = new Date()
-                        } 
-                        
-                        const dif = Math.abs(new Date(t1).getTime() - new Date(t2).getTime()) / 1000
-                        text = row.count/Math.floor(dif)
-                        return text.toFixed(3)
+                    {
+                        render(data, type, row, meta) {
+                            let text = `<div style="text-transform: capitalize;">${row._id.companyCode}</div>`
+                            return text
+                        }
+                    },
+                    {
+                        render(data, type, row, meta) {
+                            return row._id.date
+                        }
+                    },
+                    {
+                        render(data, type, row, meta) {
+                            return row.count
+                        }
+                    },
+                    {
+                        render(data, type, row, meta) {
+                            let text
+                            let now = new Date()
+                            const t1 = new Date(moment(row._id.date, 'YYYY-MM-DD').startOf('day'))
+                            let t2 = new Date(moment(row._id.date, 'YYYY-MM-DD').endOf('day'));
+                            if (now.getFullYear() === t2.getFullYear() && now.getDate() === t2.getDate() && now.getMonth() === t2.getMonth()) {
+                                t2 = new Date()
+                            }
 
-                    }},
-                    
-                    { 
-                        render(data, type, row, meta){
+                            const dif = Math.abs(new Date(t1).getTime() - new Date(t2).getTime()) / 1000
+                            text = row.count / Math.floor(dif)
+                            return text.toFixed(3)
+
+                        }
+                    },
+
+                    {
+                        render(data, type, row, meta) {
                             let text = `<div class='action-btn'>
                                             <a href="tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
                                            `
-                         return text
+                            return text
                         }
                     }
-    
-                   
+
+
                 ]
             })
 
@@ -485,7 +453,7 @@
 
         }
 
-        
+
         function resetFilter() {
             $('#startDate').attr('disabled', false)
             $('#endDate').attr('disabled', false)
@@ -501,7 +469,7 @@
             $('.dropdown-filter').removeClass('open')
 
         }
-       
+
     </script>
     </body>
 

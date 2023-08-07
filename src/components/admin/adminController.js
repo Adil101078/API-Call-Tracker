@@ -6,6 +6,7 @@ const { trackerModel } = require('../trackerReport/trackerModel')
 const bcrypt = require('bcryptjs')
 const { dateToUtcStartDate, dateToUtcEndDate, getUniqueListBy } = require('../../helpers/commonHelpers')
 const moment = require('moment')
+const { fetchArchivedData } = require('../../helpers/db.helper')
 
 module.exports = {
     initiateLogin: async (req, res) => {
@@ -320,5 +321,9 @@ module.exports = {
             }
         ])
         return requestHandler.handleResponse({ res, data })
+    },
+    pastReport: async(req, res) => {
+        const data = await fetchArchivedData(req.query)
+        return res.send(data)
     }
 }
