@@ -79,12 +79,6 @@ module.exports = {
 
                 }
             },
-            {
-                $sort: {
-                    '_id.date': -1,
-                    count: -1
-                }
-            },
         )
         if (search) {
             query.unshift({
@@ -133,6 +127,10 @@ module.exports = {
                 }
             })
         }
+        query.push( {
+            $sort: orderByData
+        })
+        console.log(orderByData)
         query.push({
             $facet: {
                 list: [

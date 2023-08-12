@@ -5,6 +5,7 @@ const { GeneratePDF } = require('./pdf-creator.helper');
 const { MongoClient } = require('mongodb');
 const url = config.secondaryDb
 const COLLECTION_NAME = 'reports';
+const {dateToUtcStartDate, dateToUtcEndDate} = require('../helpers/commonHelpers')
 
 async function connectToMongo() {
     const client = new MongoClient(url, config.db.options);  
@@ -55,7 +56,7 @@ const moveDatabaseDocuments = async () => {
     
 }
 const fetchArchivedData = async(dataObj) => {
-    let { search, start, length } = dataObj
+    let { search, start, length, companyCode, startDate, endDate } = dataObj
     const orderBy = dataObj.columns[dataObj.order[0].column].data
     const orderByData = {}
     orderByData[orderBy] = dataObj.order[0].dir == 'asc' ? 1 : -1
@@ -63,11 +64,29 @@ const fetchArchivedData = async(dataObj) => {
     const client = await connectToMongo();
     const db = client.db();
     const collection = db.collection(COLLECTION_NAME)
-    const query = [
-        {
-            $sort:{Date: -1}
-        }
-    ]
+    let query = []
+    if (startDate && endDate) {
+        query.unshift({
+            $match: {
+                $or: [
+                    {
+                        Date: startDate,
+                    },
+                    {
+                        Date: endDate,
+                    },
+                ],
+            },
+        })
+    }
+    if (companyCode) {
+        query.unshift({
+            $match: {
+                Company_Code: companyCode
+            }
+        })
+    }
+    query.push({$sort: orderByData})
     query.push({
         $facet: {
             list: [

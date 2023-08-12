@@ -144,7 +144,95 @@
                             </div>
                             <div id="CreatorOwnboarded" class="tab-pane">
                                 <div class="row m-b-sm ">
-                                    
+                                    <div class="col-md-8 ">
+                                        <div class="bootstrap-tagsinput" id="myDropdown">
+                                            <div class="btn-group dropdown-filter">
+                                                <button type="button" class="btn  dropdown-toggle m-r-sm"
+                                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-filter" aria-hidden="true"></i>
+                                                    Filter by
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li class="dropdown-actions d-flex-between">
+                                                        <div>
+                                                            <button onclick="handlePastReportFilter()" type="button"
+                                                                class="btn btn-success btn-xs">Apply</button>
+                                                            <button onclick="resetPastReportFilter()" id="reset-filter-data"
+                                                                type="button" class="btn btn-default btn-xs">Reset</button>
+                                                        </div>
+                                                        <a onclick="closeFilter()">
+                                                            <i class="fa fa-times" aria-hidden="true"
+                                                                style="color: #000;"></i></a>
+                                                    </li>
+                                                    <li role="separator" class="divider"></li>
+    
+    
+    
+                                                    <li>
+                                                        <label>Company Code</label>
+                                                        <select id="_companyCode" class="form-control ">
+                                                            <option value="">
+                                                                Select
+                                                            </option>
+                                                            <% companyCodes.forEach(function(e){%>
+                                                                <option value="<%=e._id%>">
+                                                                    <%=e._id%>
+    
+                                                                </option>
+                                                                <%})%>
+    
+                                                        </select>
+                                                    </li>
+    
+                                                    <li role="separator" class="divider"></li>
+                                                    <li class="" id="data_5">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label>From</label>
+                                                                <div class="input-daterange input-group" id="datepicker">
+                                                                    <span class="input-group-addon"><i
+                                                                            class="fa fa-calendar"></i></span>
+                                                                    <input id="_startDate" type="text"
+                                                                        class="input-sm form-control" name="start"
+                                                                        placeholder="Please select a date"
+                                                                        autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label>To</label>
+                                                                <div class="input-daterange input-group" id="datepicker">
+                                                                    <span class="input-group-addon"><i
+                                                                            class="fa fa-calendar"></i></span>
+                                                                    <input id="_endDate" type="text"
+                                                                        class="input-sm form-control" name="start"
+                                                                        placeholder="Please select a date"
+                                                                        autocomplete="off">
+                                                                </div>
+                                                            </div>
+                                                    </li>
+    
+                                                </ul>
+                                            </div>
+    
+                                            <span id="filter-name-role" class="tag label label-primary hide">
+    
+                                                <a onclick="_resetRoleFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+                                            <span id="filter-name-status" class="tag label label-primary hide">
+    
+                                                <a onclick="_resetStatusFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+                                            <span id="filter-lastMonth" class="tag label label-primary hide">
+    
+                                                <a onclick="_resetDateFilter()" style="color: #fff;"><i class="fa fa-times"
+                                                        aria-hidden="true"></i></a>
+                                            </span>
+    
+                                        </div>
+                                    </div>
     
                                 </div>
                                 <div class="table-responsive coman-table" id="owner-detail">
@@ -194,6 +282,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             loadAdminDataTable()
+            loadArchivedReports()
             $(document).on('click', '.dropdown-menu li', function (e) {
                 e.stopPropagation();
             }); $(document).on('click', '.dropdown-menu li  option', function (e) {
@@ -214,6 +303,10 @@
         })
         function getUrl(companyCode, startDate, endDate) {
             let url = `tracker-reports.listing?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
+            return url
+        }
+        function generateUrl(companyCode, startDate, endDate) {
+            let url = `past-reports?companyCode=${companyCode}&startDate=${startDate}&endDate=${endDate}`
             return url
         }
 
@@ -252,58 +345,6 @@
 
             let generateUrl = getUrl(search, startDate, endDate)
             // Initiate datatable
-
-            $('.dataTables-example1').DataTable({
-                destroy: true,
-                "search": false,
-                "processing": true,
-                "filter": false,
-                "orderMulti": false,
-                'serverSide': true,
-                'aaSorting': [[1, 'desc']],
-                initComplete: function () {
-                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
-                },
-                "ajax": {
-                    "url": 'past-reports',
-                    "type": "GET",
-                    "datatype": "json",
-                },
-                dom: 'Bfrtip',
-                lengthMenu: [
-                    [10, 25, 50, 1400000],
-                    ['10 rows', '25 rows', '50 rows', 'Show all']
-                ],
-                buttons: [
-                    'pageLength',
-                    {
-                        text: 'Refresh',
-                        action: function (e, dt, node, config) {
-                            dt.ajax.reload();
-                        }
-                    },
-                    'csv', 'excel', 'pdf'
-                ],
-                "columns": [
-                    {
-                        data: 'Company_Code', orderable:false
-                            
-                    },
-                    {
-                        data: 'Date', orderable:false
-                    },
-                    {
-                        data: 'Hits', orderable:false
-                    },
-                    {
-                        data:'Hits/sec', orderable:false, render:(data)=> data?.toFixed(3)
-                    },
-
-    
-
-
-                ]
-            })
             $('.dataTables-example').DataTable({
                 destroy: true,
                 "search": true,
@@ -311,7 +352,7 @@
                 "filter": true,
                 "orderMulti": false,
                 'serverSide': true,
-                'aaSorting': [[1, 'desc']],
+                order: [[2, 'desc']],
                 initComplete: function () {
                     $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
                 },
@@ -337,22 +378,26 @@
                 ],
                 "columns": [
                     {
+                        data: '_id.companyCode',
                         render(data, type, row, meta) {
                             let text = `<div style="text-transform: capitalize;">${row._id.companyCode}</div>`
                             return text
                         }
                     },
                     {
+                        data: '_id.date',
                         render(data, type, row, meta) {
                             return row._id.date
                         }
                     },
                     {
+                        data: 'count',
                         render(data, type, row, meta) {
                             return row.count
                         }
                     },
                     {
+                        data: 'count',
                         render(data, type, row, meta) {
                             let text
                             let now = new Date()
@@ -369,7 +414,7 @@
                         }
                     },
 
-                    {
+                    { orderable: false,
                         render(data, type, row, meta) {
                             let text = `<div class='action-btn'>
                                             <a href="tracker-reports.byDate?companyCode=${row._id.companyCode}&date=${row._id.date}"><i data-toggle="tooltip" data-placement="top" title="View" class="fa fa-eye" aria-hidden="true"></i></a>
@@ -408,6 +453,32 @@
         });
 
 
+let _companyCodes = $('#_companyCode').val()
+let _start =  $('#_startDate').val()
+let _end = $('#_endDate').val()
+$('#_companyCode').on('change', function () {
+        _companyCodes = this.value
+        
+
+    });
+    $('#_startDate').change(function () {
+        _start = this.value
+    })
+
+    $('#_endDate').on('change', function () {
+        _end = this.value
+    })
+
+const handlePastReportFilter = () => { 
+    console.log('sdsdsdsd',_companyCodes)   
+    loadArchivedReports(_companyCodes, _start, _end)    
+}
+const resetPastReportFilter = () => {
+    $('#_companyCode').val('')
+    $('#_startDate').val('')
+    $('#_endDate').val('')
+    loadArchivedReports("", "", "")
+}
 
         function filterApi() {
 
@@ -468,6 +539,70 @@
         function closeFilter() {
             $('.dropdown-filter').removeClass('open')
 
+        }
+        const loadArchivedReports = (_companyCode, _startDate, _endDate) => {
+            let companyCodes
+            let startingDate
+            let endingDate
+            if(!_companyCode) companyCodes = "" 
+            else companyCodes = _companyCode
+            if(!_start) startingDate = ""
+            else startingDate = _start
+            if(!_end) endingDate = ""
+            else endingDate = _end
+            const _generateUrl = generateUrl(companyCodes, startingDate, endingDate)
+            
+            $('.dataTables-example1').DataTable({
+                destroy: true,
+                "search": false,
+                "processing": true,
+                "filter": false,
+                "orderMulti": false,
+                'serverSide': true,
+                order: [[2, 'desc']],
+                initComplete: function () {
+                    $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
+                },
+                "ajax": {
+                    "url": _generateUrl,
+                    "type": "GET",
+                    "datatype": "json",
+                },
+                dom: 'Bfrtip',
+                lengthMenu: [
+                    [10, 25, 50, 1400000],
+                    ['10 rows', '25 rows', '50 rows', 'Show all']
+                ],
+                buttons: [
+                    'pageLength',
+                    {
+                        text: 'Refresh',
+                        action: function (e, dt, node, config) {
+                            dt.ajax.reload();
+                        }
+                    },
+                    'csv', 'excel', 'pdf'
+                ],
+                "columns": [
+                    {
+                        data: 'Company_Code', orderable:false
+                            
+                    },
+                    {
+                        data: 'Date', orderable:false
+                    },
+                    {
+                        data: 'Hits',
+                    },
+                    {
+                        data:'Hits/sec', orderable:false, render:(data)=> data?.toFixed(3)
+                    },
+
+    
+
+
+                ]
+            })
         }
 
     </script>
