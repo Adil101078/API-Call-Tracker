@@ -5,10 +5,9 @@ const { GeneratePDF } = require('./pdf-creator.helper');
 const { MongoClient } = require('mongodb');
 const url = config.secondaryDb
 const COLLECTION_NAME = 'reports';
-const {dateToUtcStartDate, dateToUtcEndDate} = require('../helpers/commonHelpers')
 
 async function connectToMongo() {
-    const client = new MongoClient(url, config.db.options);  
+    const client = new MongoClient(url, config.db.options);
     try {
         await client.connect();
         logger.info(`Secondary Database Connected Successfully.`)
@@ -17,7 +16,7 @@ async function connectToMongo() {
         logger.error(`Error Connecting to Secondary Database: ${error?.message}`)
         throw error;
     }
-  }
+}
 const monitorAndCleanup = async () => {
     try {
         const stats = await trackerModel.collection.stats({ scale: 1024 })
@@ -41,80 +40,107 @@ const monitorAndCleanup = async () => {
 const moveDatabaseDocuments = async () => {
     try {
         const client = await connectToMongo();
-        const db = client.db();     
+        const db = client.db();
         const data = await GeneratePDF()
         const result = await db.collection(COLLECTION_NAME).insertMany(data)
-        if(result){
+        if (result) {
             await trackerModel.deleteMany()
         }
         await client.close()
         return true
-        
+
     } catch (error) {
         return logger.error(`Error: ${error?.message}`)
     }
-    
+
 }
-const fetchArchivedData = async(dataObj) => {
-    let { search, start, length, companyCode, startDate, endDate } = dataObj
-    const orderBy = dataObj.columns[dataObj.order[0].column].data
-    const orderByData = {}
-    orderByData[orderBy] = dataObj.order[0].dir == 'asc' ? 1 : -1
-    search = search.value != '' ? search.value : false
-    const client = await connectToMongo();
-    const db = client.db();
-    const collection = db.collection(COLLECTION_NAME)
-    let query = []
-    if (startDate && endDate) {
-        query.unshift({
-            $match: {
-                $or: [
+const fetchArchivedData = async (dataObj) => {
+    try {
+        let { search, start, length, companyCode, startDate, endDate } = dataObj
+        const orderBy = dataObj.columns[dataObj.order[0].column].data
+        const orderByData = {}
+        orderByData[orderBy] = dataObj.order[0].dir == 'asc' ? 1 : -1
+        search = search.value != '' ? search.value : false
+        const client = await connectToMongo();
+        const db = client.db();
+        const collection = db.collection(COLLECTION_NAME)
+        let query = []
+        if (startDate && endDate) {
+            query.unshift({
+                $match: {
+                    $or: [
+                        {
+                            Date: startDate,
+                        },
+                        {
+                            Date: endDate,
+                        },
+                    ],
+                },
+            })
+        }
+        if (companyCode) {
+            query.unshift({
+                $match: {
+                    Company_Code: companyCode
+                }
+            })
+        }
+        query.push({
+            $group: {
+                _id: {
+                    date: '$Date',
+                    companyCode: '$Company_Code'
+                },
+                "Hits/sec": {
+                    $first: '$Hits/sec'
+                },
+                Hits: {
+                    $first: '$Hits'
+                }
+            }
+        },
+            {
+                $project: {
+                    _id: 0,
+                    Company_Code: '$_id.companyCode',
+                    Hits: 1,
+                    'Hits/sec': 1,
+                    Date: '$_id.date',
+                }
+            })
+        query.push({ $sort: orderByData })
+        query.push({
+            $facet: {
+                list: [
                     {
-                        Date: startDate,
+                        $skip: Number(start) || 0,
                     },
                     {
-                        Date: endDate,
+                        $limit: Number(length) || 10,
+                    },
+                ],
+                totalRecords: [
+                    {
+                        $count: 'count',
                     },
                 ],
             },
         })
+        const response = await collection.aggregate(query).toArray()
+        const responseData = {
+            draw: dataObj.draw,
+            recordsTotal: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
+            recordsFiltered: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
+            data: response[0] ? response[0].list : [],
+        }
+
+        await client.close()
+        return responseData
+    } catch (err) {
+        logger.error(err)
     }
-    if (companyCode) {
-        query.unshift({
-            $match: {
-                Company_Code: companyCode
-            }
-        })
-    }
-    query.push({$sort: orderByData})
-    query.push({
-        $facet: {
-            list: [
-                {
-                    $skip: Number(start) || 0,
-                },
-                {
-                    $limit: Number(length) || 10,
-                },
-            ],
-            totalRecords: [
-                {
-                    $count: 'count',
-                },
-            ],
-        },
-    })
-    const response = await collection.aggregate(query).toArray()
-    const responseData = {
-        draw: dataObj.draw,
-        recordsTotal: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
-        recordsFiltered: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
-        data: response[0] ? response[0].list : [],
-    }
-    
-    await client.close()
-    return responseData
-    
+
 }
 
 module.exports = {

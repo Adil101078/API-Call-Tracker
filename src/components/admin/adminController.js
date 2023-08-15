@@ -70,7 +70,7 @@ module.exports = {
                         "date": {
                             $dateToString: {
                                 date: '$createdAt',
-                                format: "%Y-%m-%d"
+                                format: "%d-%m-%Y"
                             }
                         },
                         "companyCode": "$companyCode"

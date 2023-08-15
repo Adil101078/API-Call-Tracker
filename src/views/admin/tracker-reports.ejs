@@ -352,7 +352,7 @@
                 "filter": true,
                 "orderMulti": false,
                 'serverSide': true,
-                order: [[2, 'desc']],
+                order: [[1, 'desc']],
                 initComplete: function () {
                     $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
                 },
@@ -559,7 +559,7 @@ const resetPastReportFilter = () => {
                 "filter": false,
                 "orderMulti": false,
                 'serverSide': true,
-                order: [[2, 'desc']],
+                order: [[1, 'desc']],
                 initComplete: function () {
                     $(this.api().table().container()).find('input[type="search"]').parent().wrap('<form>').parent().attr('autocomplete', 'off').css('overflow', 'hidden').css('margin', 'auto');
                 },
@@ -589,7 +589,7 @@ const resetPastReportFilter = () => {
                             
                     },
                     {
-                        data: 'Date', orderable:false
+                        data: 'Date',
                     },
                     {
                         data: 'Hits',

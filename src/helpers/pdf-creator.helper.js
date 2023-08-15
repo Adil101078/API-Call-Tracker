@@ -24,13 +24,13 @@ const { template } = require('../utils/templates/pdf');
           date: {
            $dateToString: {
             date: '$createdAt',
-            format: '%d/%m/%Y'
+            format: '%d-%m-%Y'
            }
           },
           companyCode: '$companyCode'
          },
          count: {
-          $sum: 1
+          $sum: 1 
          }
         }
        }, {
