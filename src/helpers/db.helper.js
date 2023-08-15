@@ -38,30 +38,31 @@ const monitorAndCleanup = async () => {
 }
 
 const moveDatabaseDocuments = async () => {
+    const client = await connectToMongo();
     try {
-        const client = await connectToMongo();
         const db = client.db();
         const data = await GeneratePDF()
         const result = await db.collection(COLLECTION_NAME).insertMany(data)
         if (result) {
             await trackerModel.deleteMany()
         }
-        await client.close()
         return true
 
     } catch (error) {
         return logger.error(`Error: ${error?.message}`)
+    } finally {
+        await client.close()
     }
 
 }
 const fetchArchivedData = async (dataObj) => {
+    const client = await connectToMongo();
     try {
         let { search, start, length, companyCode, startDate, endDate } = dataObj
         const orderBy = dataObj.columns[dataObj.order[0].column].data
         const orderByData = {}
         orderByData[orderBy] = dataObj.order[0].dir == 'asc' ? 1 : -1
         search = search.value != '' ? search.value : false
-        const client = await connectToMongo();
         const db = client.db();
         const collection = db.collection(COLLECTION_NAME)
         let query = []
@@ -134,11 +135,11 @@ const fetchArchivedData = async (dataObj) => {
             recordsFiltered: response[0].totalRecords[0] ? response[0].totalRecords[0].count : 0,
             data: response[0] ? response[0].list : [],
         }
-
-        await client.close()
         return responseData
     } catch (err) {
         logger.error(err)
+    } finally{
+        await client.close()
     }
 
 }
